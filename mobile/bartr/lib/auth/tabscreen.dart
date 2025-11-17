@@ -40,36 +40,16 @@ class _AuthTabScreenState extends State<AuthTabScreen>
             // Header Section
             Padding(
               padding: const EdgeInsets.only(
-                top: 40,
+                top: 20,
                 bottom: 32,
                 left: 24,
                 right: 24,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Welcome',
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Manage your account securely',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
               ),
             ),
 
             // Modern Segmented Tab Bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Container(
                 decoration: BoxDecoration(
                   color: isDark ? Colors.grey[900] : Colors.grey[100],
@@ -98,7 +78,7 @@ class _AuthTabScreenState extends State<AuthTabScreen>
                     letterSpacing: 0.2,
                   ),
                   unselectedLabelStyle: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0.2,
                   ),
@@ -108,7 +88,7 @@ class _AuthTabScreenState extends State<AuthTabScreen>
                     Tab(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 34,
+                          horizontal: 44,
                           vertical: 10,
                         ),
                         child: Text('Sign In'),
@@ -117,7 +97,7 @@ class _AuthTabScreenState extends State<AuthTabScreen>
                     Tab(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 34,
+                          horizontal: 44,
                           vertical: 10,
                         ),
                         child: Text('Sign Up'),
