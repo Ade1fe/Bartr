@@ -40,12 +40,39 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: _showProfileScreen
-            ? _buildProfileScreen()
-            : _buildSignupScreen(),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Theme(
+      data: Theme.of(context).copyWith(
+        primaryColor: Colors.black,
+        scaffoldBackgroundColor: isDark ? Colors.black : Colors.white,
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.blue, width: 2),
+          ),
+          hintStyle: const TextStyle(color: Colors.grey),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
+          ),
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: _showProfileScreen
+              ? _buildProfileScreen()
+              : _buildSignupScreen(),
+        ),
       ),
     );
   }

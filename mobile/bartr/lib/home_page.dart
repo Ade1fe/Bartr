@@ -1,3 +1,4 @@
+import 'package:bartr/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class SwapHomePage extends StatelessWidget {
@@ -5,8 +6,11 @@ class SwapHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // get current theme
+    // final textTheme = theme.textTheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xfff7f8fa),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -14,17 +18,17 @@ class SwapHomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 🔍 Search + Categories + Location + Filter
-              _buildTopFilters(),
+              _buildTopFilters(theme),
 
               const SizedBox(height: 20),
 
               // ⭐ Smart Match Tabs
-              _buildTabs(),
+              _buildTabs(theme),
 
               const SizedBox(height: 20),
 
               // 🧩 Items Grid
-              _buildItemsGrid(),
+              _buildItemsGrid(theme),
             ],
           ),
         ),
@@ -32,10 +36,8 @@ class SwapHomePage extends StatelessWidget {
     );
   }
 
-  // -------------------------------------------
-  // 🔍 TOP FILTER BAR (Search + Category + Location + Filter Icon)
-  // -------------------------------------------
-  Widget _buildTopFilters() {
+  // 🔍 TOP FILTER BAR
+  Widget _buildTopFilters(ThemeData theme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -43,13 +45,13 @@ class SwapHomePage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            color: theme.inputDecorationTheme.fillColor,
+            borderRadius: BorderRadius.circular(AppTheme.radius),
             border: Border.all(color: Colors.grey.shade300),
           ),
           child: Row(
             children: [
-              const Icon(Icons.search, color: Colors.grey),
+              Icon(Icons.search, color: Colors.grey),
               const SizedBox(width: 10),
               Expanded(
                 child: TextField(
@@ -68,25 +70,22 @@ class SwapHomePage extends StatelessWidget {
         // Category + Location + Filter Icon
         Row(
           children: [
-            // Category Dropdown
-            _buildDropdown("All Categories"),
-
+            _buildDropdown("All Categories", theme),
             const SizedBox(width: 10),
-
-            // Location Dropdown
-            _buildDropdown("Nearby"),
-
+            _buildDropdown("Nearby", theme),
             const SizedBox(width: 10),
-
-            // Filter Icon
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppTheme.radius),
                 border: Border.all(color: Colors.grey.shade300),
-                color: Colors.white,
+                color: theme.inputDecorationTheme.fillColor,
               ),
-              child: const Icon(Icons.filter_list, size: 22),
+              child: Icon(
+                Icons.filter_list,
+                size: 22,
+                color: theme.colorScheme.primary,
+              ),
             ),
           ],
         ),
@@ -94,49 +93,54 @@ class SwapHomePage extends StatelessWidget {
     );
   }
 
-  // -------------------------------------------
-  // 📌 DROPDOWN BOX
-  // -------------------------------------------
-  Widget _buildDropdown(String title) {
+  Widget _buildDropdown(String title, ThemeData theme) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppTheme.radius),
           border: Border.all(color: Colors.grey.shade300),
-          color: Colors.white,
+          color: theme.inputDecorationTheme.fillColor,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(title, style: const TextStyle(fontSize: 14)),
-            const Icon(Icons.keyboard_arrow_down_rounded),
+            Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: theme.colorScheme.primary,
+            ),
           ],
         ),
       ),
     );
   }
 
-  // -------------------------------------------
-  // 🔖 Tabs (Browse All - Smart Matches - Saved)
-  // -------------------------------------------
-  Widget _buildTabs() {
+  // 🔖 Tabs
+  Widget _buildTabs(ThemeData theme) {
     return Row(
       children: [
-        _tabButton("Browse All", isActive: true),
+        _tabButton("Browse All", theme, isActive: true),
         const SizedBox(width: 8),
-        _tabButton("Smart Matches", count: 12),
+        _tabButton("Smart Matches", theme, count: 12),
         const SizedBox(width: 8),
-        _tabButton("Saved"),
+        _tabButton("Saved", theme),
       ],
     );
   }
 
-  Widget _tabButton(String text, {bool isActive = false, int? count}) {
+  Widget _tabButton(
+    String text,
+    ThemeData theme, {
+    bool isActive = false,
+    int? count,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: isActive ? Colors.black : Colors.white,
+        color: isActive
+            ? theme.colorScheme.primary
+            : theme.scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.grey.shade300),
       ),
@@ -145,7 +149,9 @@ class SwapHomePage extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              color: isActive ? Colors.white : Colors.black,
+              color: isActive
+                  ? Colors.white
+                  : theme.textTheme.bodyMedium!.color,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -153,7 +159,11 @@ class SwapHomePage extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               "$count",
-              style: TextStyle(color: isActive ? Colors.white : Colors.black),
+              style: TextStyle(
+                color: isActive
+                    ? Colors.white
+                    : theme.textTheme.bodyMedium!.color,
+              ),
             ),
           ],
         ],
@@ -161,10 +171,8 @@ class SwapHomePage extends StatelessWidget {
     );
   }
 
-  // -------------------------------------------
-  // 🛒 ITEMS GRID (with user, location & reviews)
-  // -------------------------------------------
-  Widget _buildItemsGrid() {
+  // 🛒 ITEMS GRID
+  Widget _buildItemsGrid(ThemeData theme) {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -175,19 +183,15 @@ class SwapHomePage extends StatelessWidget {
         crossAxisSpacing: 14,
         mainAxisSpacing: 14,
       ),
-      itemBuilder: (context, index) {
-        return _swapItemCard();
-      },
+      itemBuilder: (context, index) => _swapItemCard(theme),
     );
   }
 
-  // -------------------------------------------
-  // ⭐ SWAP ITEM CARD (with user info)
-  // -------------------------------------------
-  Widget _swapItemCard() {
+  // ⭐ SWAP ITEM CARD
+  Widget _swapItemCard(ThemeData theme) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.inputDecorationTheme.fillColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
@@ -211,15 +215,13 @@ class SwapHomePage extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-
           const SizedBox(height: 10),
-
           // User Info
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 18,
                   backgroundImage: NetworkImage(
                     "https://i.imgur.com/BoN9kdC.png",
@@ -229,22 +231,29 @@ class SwapHomePage extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         "Sarah John",
-                        style: TextStyle(
-                          fontSize: 13,
+                        style: theme.textTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.w600,
+                          fontSize: 13,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      const SizedBox(height: 2),
                       Row(
                         children: [
-                          Icon(Icons.location_on, size: 13, color: Colors.grey),
-                          SizedBox(width: 2),
+                          const Icon(
+                            Icons.location_on,
+                            size: 13,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(width: 2),
                           Text(
                             "Abuja, Nigeria",
-                            style: TextStyle(fontSize: 11, color: Colors.grey),
+                            style: theme.textTheme.bodySmall!.copyWith(
+                              fontSize: 11,
+                              color: Colors.grey,
+                            ),
                           ),
                         ],
                       ),
@@ -254,9 +263,7 @@ class SwapHomePage extends StatelessWidget {
               ],
             ),
           ),
-
           const SizedBox(height: 8),
-
           // Reviews
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -268,7 +275,6 @@ class SwapHomePage extends StatelessWidget {
               ),
             ),
           ),
-
           const SizedBox(height: 10),
         ],
       ),
