@@ -1,3 +1,4 @@
+import 'package:bartr/home_page.dart';
 import 'package:bartr/widget/custom_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -406,112 +407,6 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // const Text(
-            //   'Profile Photo',
-            //   style: TextStyle(
-            //     fontSize: 14,
-            //     fontWeight: FontWeight.w600,
-            //     color: Colors.black,
-            //   ),
-            // ),
-            // const SizedBox(height: 8),
-            // GestureDetector(
-            //   onTap: () {
-            //     // Handle image upload
-            //   },
-            //   child: Container(
-            //     height: 180,
-            //     width: double.infinity,
-            //     decoration: BoxDecoration(
-            //       border: Border.all(
-            //         color: Colors.grey[300]!,
-            //         width: 2,
-            //         style: BorderStyle.solid,
-            //       ),
-            //       borderRadius: BorderRadius.circular(8),
-            //       color: Colors.grey[50],
-            //     ),
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: [
-            //         Icon(
-            //           Icons.cloud_upload_outlined,
-            //           size: 48,
-            //           color: Colors.grey[400],
-            //         ),
-            //         const SizedBox(height: 12),
-            //         const Text(
-            //           'Click to upload or drag and drop',
-            //           style: TextStyle(
-            //             fontSize: 14,
-            //             color: Colors.grey,
-            //             fontWeight: FontWeight.w500,
-            //           ),
-            //         ),
-            //         const SizedBox(height: 4),
-            //         const Text(
-            //           'PNG, JPG up to 5MB',
-            //           style: TextStyle(fontSize: 12, color: Colors.grey),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // const SizedBox(height: 20),
-
-            // const Text(
-            //   'Verification (Optional)',
-            //   style: TextStyle(
-            //     fontSize: 14,
-            //     fontWeight: FontWeight.w600,
-            //     color: Colors.black,
-            //   ),
-            // ),
-            // const SizedBox(height: 4),
-            // const Text(
-            //   'Upload ID for verified badge',
-            //   style: TextStyle(fontSize: 12, color: Colors.grey),
-            // ),
-            // const SizedBox(height: 8),
-            // GestureDetector(
-            //   onTap: () {
-            //     // Handle ID upload
-            //   },
-            //   child: Container(
-            //     height: 140,
-            //     width: double.infinity,
-            //     decoration: BoxDecoration(
-            //       border: Border.all(
-            //         color: Colors.grey[300]!,
-            //         width: 2,
-            //         style: BorderStyle.solid,
-            //       ),
-            //       borderRadius: BorderRadius.circular(8),
-            //       color: Colors.grey[50],
-            //     ),
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: [
-            //         Icon(
-            //           Icons.cloud_upload_outlined,
-            //           size: 48,
-            //           color: Colors.grey[400],
-            //         ),
-            //         const SizedBox(height: 12),
-            //         const Text(
-            //           'Upload government-issued ID',
-            //           style: TextStyle(
-            //             fontSize: 14,
-            //             color: Colors.grey,
-            //             fontWeight: FontWeight.w500,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // const SizedBox(height: 30),
             GestureDetector(
               onTap: _pickProfileImage,
               child: Container(
@@ -640,6 +535,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     // icon: Icons.arrow_forward_ios,
                     color: _agreeToTerms ? Colors.black : Colors.grey,
                     onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const SwapHomePage()),
+                      );
                       print('Profile completed');
                       // Handle profile submission
                     },
