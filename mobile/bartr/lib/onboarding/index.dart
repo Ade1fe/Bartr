@@ -8,6 +8,7 @@ class IndexFile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Center(
@@ -18,7 +19,11 @@ class IndexFile extends StatelessWidget {
               const Text(
                 "Trade Without Money",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 28,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
 
               const SizedBox(height: 16),
@@ -27,7 +32,11 @@ class IndexFile extends StatelessWidget {
               const Text(
                 "Exchange goods and services directly with others.\nNo cash needed — only value for value.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15, height: 1.4),
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black,
+                  height: 1.4,
+                ),
               ),
 
               const SizedBox(height: 40),
@@ -76,7 +85,11 @@ class IndexFile extends StatelessWidget {
       children: [
         Text(
           value,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            fontSize: 18,
+          ),
         ),
         const SizedBox(height: 4),
         Text(label, textAlign: TextAlign.center),

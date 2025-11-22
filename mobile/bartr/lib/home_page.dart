@@ -1,4 +1,3 @@
-import 'package:bartr/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class SwapHomePage extends StatelessWidget {
@@ -6,29 +5,19 @@ class SwapHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // get current theme
-    // final textTheme = theme.textTheme;
-
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: const Color(0xfff7f8fa),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 🔍 Search + Categories + Location + Filter
-              _buildTopFilters(theme),
-
+              _buildTopFilters(),
               const SizedBox(height: 20),
-
-              // ⭐ Smart Match Tabs
-              _buildTabs(theme),
-
+              _buildTabs(),
               const SizedBox(height: 20),
-
-              // 🧩 Items Grid
-              _buildItemsGrid(theme),
+              _buildItemsGrid(),
             ],
           ),
         ),
@@ -37,7 +26,7 @@ class SwapHomePage extends StatelessWidget {
   }
 
   // 🔍 TOP FILTER BAR
-  Widget _buildTopFilters(ThemeData theme) {
+  Widget _buildTopFilters() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -45,15 +34,15 @@ class SwapHomePage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-            color: theme.inputDecorationTheme.fillColor,
-            borderRadius: BorderRadius.circular(AppTheme.radius),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.grey.shade300),
           ),
           child: Row(
             children: [
-              Icon(Icons.search, color: Colors.grey),
+              const Icon(Icons.search, color: Colors.grey),
               const SizedBox(width: 10),
-              Expanded(
+              const Expanded(
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: "Search for goods or services...",
@@ -70,21 +59,21 @@ class SwapHomePage extends StatelessWidget {
         // Category + Location + Filter Icon
         Row(
           children: [
-            _buildDropdown("All Categories", theme),
+            _buildDropdown("All Categories"),
             const SizedBox(width: 10),
-            _buildDropdown("Nearby", theme),
+            _buildDropdown("Nearby"),
             const SizedBox(width: 10),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppTheme.radius),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey.shade300),
-                color: theme.inputDecorationTheme.fillColor,
+                color: Colors.white,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.filter_list,
                 size: 22,
-                color: theme.colorScheme.primary,
+                color: Colors.black,
               ),
             ),
           ],
@@ -93,23 +82,20 @@ class SwapHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildDropdown(String title, ThemeData theme) {
+  Widget _buildDropdown(String title) {
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppTheme.radius),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.grey.shade300),
-          color: theme.inputDecorationTheme.fillColor,
+          color: Colors.white,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(title, style: const TextStyle(fontSize: 14)),
-            Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: theme.colorScheme.primary,
-            ),
+            const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.black),
           ],
         ),
       ),
@@ -117,30 +103,23 @@ class SwapHomePage extends StatelessWidget {
   }
 
   // 🔖 Tabs
-  Widget _buildTabs(ThemeData theme) {
+  Widget _buildTabs() {
     return Row(
       children: [
-        _tabButton("Browse All", theme, isActive: true),
+        _tabButton("Browse All", isActive: true),
         const SizedBox(width: 8),
-        _tabButton("Smart Matches", theme, count: 12),
+        _tabButton("Smart Matches", count: 12),
         const SizedBox(width: 8),
-        _tabButton("Saved", theme),
+        _tabButton("Saved"),
       ],
     );
   }
 
-  Widget _tabButton(
-    String text,
-    ThemeData theme, {
-    bool isActive = false,
-    int? count,
-  }) {
+  Widget _tabButton(String text, {bool isActive = false, int? count}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: isActive
-            ? theme.colorScheme.primary
-            : theme.scaffoldBackgroundColor,
+        color: isActive ? Colors.black : Colors.white,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Colors.grey.shade300),
       ),
@@ -149,9 +128,7 @@ class SwapHomePage extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              color: isActive
-                  ? Colors.white
-                  : theme.textTheme.bodyMedium!.color,
+              color: isActive ? Colors.white : Colors.black87,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -159,11 +136,7 @@ class SwapHomePage extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               "$count",
-              style: TextStyle(
-                color: isActive
-                    ? Colors.white
-                    : theme.textTheme.bodyMedium!.color,
-              ),
+              style: TextStyle(color: isActive ? Colors.white : Colors.black87),
             ),
           ],
         ],
@@ -172,7 +145,7 @@ class SwapHomePage extends StatelessWidget {
   }
 
   // 🛒 ITEMS GRID
-  Widget _buildItemsGrid(ThemeData theme) {
+  Widget _buildItemsGrid() {
     return GridView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -183,15 +156,15 @@ class SwapHomePage extends StatelessWidget {
         crossAxisSpacing: 14,
         mainAxisSpacing: 14,
       ),
-      itemBuilder: (context, index) => _swapItemCard(theme),
+      itemBuilder: (context, index) => _swapItemCard(),
     );
   }
 
   // ⭐ SWAP ITEM CARD
-  Widget _swapItemCard(ThemeData theme) {
+  Widget _swapItemCard() {
     return Container(
       decoration: BoxDecoration(
-        color: theme.inputDecorationTheme.fillColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
@@ -205,7 +178,6 @@ class SwapHomePage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Item Image
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             child: Image.network(
@@ -216,44 +188,39 @@ class SwapHomePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
+
           // User Info
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 18,
                   backgroundImage: NetworkImage(
                     "https://i.imgur.com/BoN9kdC.png",
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         "Sarah John",
-                        style: theme.textTheme.bodyMedium!.copyWith(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
+                          color: Colors.black,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Row(
                         children: [
-                          const Icon(
-                            Icons.location_on,
-                            size: 13,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(width: 2),
+                          Icon(Icons.location_on, size: 13, color: Colors.grey),
+                          SizedBox(width: 2),
                           Text(
                             "Abuja, Nigeria",
-                            style: theme.textTheme.bodySmall!.copyWith(
-                              fontSize: 11,
-                              color: Colors.grey,
-                            ),
+                            style: TextStyle(fontSize: 11, color: Colors.grey),
                           ),
                         ],
                       ),
@@ -263,18 +230,23 @@ class SwapHomePage extends StatelessWidget {
               ],
             ),
           ),
+
           const SizedBox(height: 8),
+
           // Reviews
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(
-              children: List.generate(
-                5,
-                (index) =>
-                    const Icon(Icons.star, size: 15, color: Colors.amber),
-              ),
+              children: [
+                Icon(Icons.star, size: 15, color: Colors.amber),
+                Icon(Icons.star, size: 15, color: Colors.amber),
+                Icon(Icons.star, size: 15, color: Colors.amber),
+                Icon(Icons.star, size: 15, color: Colors.amber),
+                Icon(Icons.star, size: 15, color: Colors.amber),
+              ],
             ),
           ),
+
           const SizedBox(height: 10),
         ],
       ),

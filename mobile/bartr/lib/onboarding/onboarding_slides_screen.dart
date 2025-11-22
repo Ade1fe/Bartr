@@ -51,6 +51,7 @@ class _OnboardingSlidesScreenState extends State<OnboardingSlidesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -60,7 +61,10 @@ class _OnboardingSlidesScreenState extends State<OnboardingSlidesScreen> {
               child: TextButton(
                 onPressed: () =>
                     _controller.jumpToPage(onboardingData.length - 1),
-                child: const Text("Skip"),
+                child: const Text(
+                  "Skip",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -93,6 +97,7 @@ class _OnboardingSlidesScreenState extends State<OnboardingSlidesScreen> {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 24,
+                            color: Colors.black,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -102,7 +107,11 @@ class _OnboardingSlidesScreenState extends State<OnboardingSlidesScreen> {
                         Text(
                           onboardingData[index]['subtitle']!,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 15, height: 1.4),
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: Colors.black,
+                            height: 1.4,
+                          ),
                         ),
                       ],
                     ),
