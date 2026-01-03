@@ -7,9 +7,12 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
 import { Handshake, MessageSquare, Search, Shield, Star, Tags, Users } from "lucide-react";
 import Image from "next/image";
-import { Bartr } from "../../../public/img";
+import { Bartr } from "../../../../public/img";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
+
   const bartrProcess = [
     { title: 'Create an Account', description: 'Sign up on Bartr and verify your account, to start your bartering journey.', icon: Users, iconBg: '#caf0f8', iconColor: '#00b4d8', hoverBorder: '#caf0f8' },
     { title: 'List Your Items', description: 'Upload items or services you want to trade with clear descriptions and images.', icon: Tags, iconBg: '#F0FFF4', iconColor: '#388C68', hoverBorder: '#AEF0D3' },
@@ -27,8 +30,8 @@ export default function Page() {
             <h1 className='text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-poppins font-normal text-white mb-4'>Trade Without Money</h1>
             <p className='text-white text-base lg:text-lg mb-4'>Exchange goods and services directly with others. No cash needed, just value for value.</p>
             <div className='flex mb-9 md:mb-12 gap-4 lg:gap-6'>
-              <Button className='rounded-lg bg-black text-white cursor-pointer shadow-black/20 shadow-xs hover:shadow-sm px-3 lg:px-5'>Get Started</Button>
-              <Button className='rounded-lg bg-white text-neutral-600 cursor-pointer shadow-neutral-300 shadow-xs hover:shadow-sm px-3 lg:px-5'>Browse Marketplace</Button>
+              <Button className='rounded-lg bg-black text-white cursor-pointer shadow-black/20 shadow-xs hover:shadow-sm px-3 lg:px-5' onClick={() => router.push('/auth')}>Get Started</Button>
+              <Button className='rounded-lg bg-white text-neutral-600 cursor-pointer shadow-neutral-300 shadow-xs hover:shadow-sm px-3 lg:px-5' onClick={() => router.push('/marketplace')}>Browse Marketplace</Button>
             </div>
             <div className='text-white flex gap-4 md:gap-8'>
               <div>
@@ -146,7 +149,7 @@ export default function Page() {
           <div className='text-center max-w-2xl'>
             <h1 className='text-neutral-700 text-2xl md:text-3xl lg:text-4xl font-poppins font-normal mb-4'>Ready to Start Trading?</h1>
             <p className='text-base text-neutral-700 lg:text-lg mb-4'>Join thousands of users exchanging value without money</p>
-            <Button className='rounded-lg bg-white text-neutral-700 cursor-pointer shadow-neutral-300 shadow-xs hover:shadow-sm px-3 lg:px-5'>Create Free Account</Button>
+            <Button className='rounded-lg bg-white text-neutral-700 cursor-pointer shadow-neutral-300 shadow-xs hover:shadow-sm px-3 lg:px-5' onClick={() => router.push('/auth')}>Create Free Account</Button>
           </div>
         </div>
       </section>
