@@ -1,20 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../ui/navigation-menu';
-import Link from 'next/link';
 import Image from 'next/image';
-import { Bartr_bg } from '../../../public/img';
-import { redirect, useRouter } from 'next/navigation';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
-import { Button } from '../ui/button';
-import { Menu } from 'lucide-react';
+import { Bartr_bg } from '@/assets';
+import { redirect } from 'next/navigation';
 
 export default function AuthHeader() {
   const isMobile = useIsMobile();
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
 
   if (isMobile) {
     return (
@@ -33,35 +25,6 @@ export default function AuthHeader() {
       <div className="relative h-16 w-24">
         <Image src={Bartr_bg} fill className="object-contain hover:cursor-pointer" loading='lazy' alt="Bartr" onClick={() => redirect('/home')} />
       </div>
-
-      {/* <NavigationMenu className={`max-w-none hidden md:flex ${isMobile ? 'items-start justify-start' : 'mx-auto'}`}>
-        <NavigationMenuList className={`gap-8 font-inter font-medium lg:gap-14 ${isMobile ? "flex-col" : "flex-wrap"}`}>
-          <NavigationMenuItem className='hover:cursor-pointer text-neutral-500 hover:text-neutral-700'>
-            <NavigationMenuLink asChild>
-              <Link href="/marketplace">Marketplace</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem className='hover:cursor-pointer text-neutral-500 hover:text-neutral-700'>
-            <NavigationMenuLink asChild>
-              <Link href="/howItWorks">How It Works</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem className='hover:cursor-pointer text-neutral-500 hover:text-neutral-700'>
-            <NavigationMenuLink asChild>
-              <Link href="/community">Community</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-
-      <div className='hidden md:flex items-center gap-4'>
-        <Button variant='outline' className='w-full border-none shadow-none hover:shadow-sm cursor-pointer' onClick={() => router.push('/auth') }>
-          Sign In
-        </Button>
-        <Button className='w-full bg-black text-white border-none shadow-sm cursor-pointer' onClick={() => router.push('/auth')}>
-          Sign Up
-        </Button>
-      </div> */}
     </header>
   )
 }

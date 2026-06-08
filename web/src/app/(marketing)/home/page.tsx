@@ -7,7 +7,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
 import { Handshake, MessageSquare, Search, Shield, Star, Tags, Users } from "lucide-react";
 import Image from "next/image";
-import { Bartr } from "../../../../public/img";
+import { Bartr } from "@/assets";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
@@ -27,8 +27,8 @@ export default function Page() {
       <section className='bg-[#A5B6B1] w-full py-10 md:py-16'>
         <div className='max-w-360 mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-2 items-center gap-12 md:gap-20 lg:gap-25'>
           <div>
-            <h1 className='text-2xl md:text-3xl lg:text-4xl 2xl:text-5xl font-poppins font-normal text-white mb-4'>Trade Without Money</h1>
-            <p className='text-white text-base lg:text-lg mb-4'>Exchange goods and services directly with others. No cash needed, just value for value.</p>
+            <h1 className='text-2xl md:text-3xl lg:text-4xl font-poppins font-normal text-white mb-4'>Trade Without Money</h1>
+            <p className='text-white text-base mb-4'>Exchange goods and services directly with others. No cash needed, just value for value.</p>
             <div className='flex mb-9 md:mb-12 gap-4 lg:gap-6'>
               <Button className='rounded-lg bg-black text-white cursor-pointer shadow-black/20 shadow-xs hover:shadow-sm px-3 lg:px-5' onClick={() => router.push('/auth')}>Get Started</Button>
               <Button className='rounded-lg bg-white text-neutral-600 cursor-pointer shadow-neutral-300 shadow-xs hover:shadow-sm px-3 lg:px-5' onClick={() => router.push('/marketplace')}>Browse Marketplace</Button>
@@ -61,7 +61,7 @@ export default function Page() {
                 </InputGroup>
               </Field>
               <Field className='overflow-y-auto max-h-96 md:max-h-112 mt-4 space-y-4'>
-                <Item variant="outline" className="rounded-xl border-neutral-200 hover:border-neutral-300 hover:cursor-pointer shadow-xs items-start flex flex-col md:flex-row md:items-center">
+                <Item variant="outline" className="rounded-xl border-neutral-100 hover:border-neutral-200 hover:cursor-pointer shadow-xs items-start flex flex-col md:flex-row md:items-center">
                   <ItemContent className="flex flex-col md:flex-row items-start md:items-center gap-4">
                     <div className='relative h-16 w-20 shadow-xs rounded-lg'>
                       <Image src={Bartr} alt='' fill className='object-contain' loading='lazy' />
@@ -74,12 +74,12 @@ export default function Page() {
                     </div>
                   </ItemContent>
                   <ItemActions>
-                    <Button variant="outline" size="sm" className="border-neutral-100 text-[#1F453D] cursor-pointer">
+                    <Button className="border-neutral-100 text-[#1F453D] cursor-pointer">
                       Open to trades
                     </Button>
                   </ItemActions>
                 </Item>
-                <Item variant="outline" className="rounded-xl border-neutral-200 hover:border-neutral-300 hover:cursor-pointer shadow-xs items-start flex flex-col md:flex-row md:items-center">
+                <Item variant="outline" className="rounded-xl border-neutral-100 hover:border-neutral-200 hover:cursor-pointer shadow-xs items-start flex flex-col md:flex-row md:items-center">
                   <ItemContent className="flex flex-col md:flex-row items-start md:items-center gap-4">
                     <div className='relative h-16 w-20 shadow-xs rounded-lg'>
                       <Image src={Bartr} alt='' fill className='object-contain' loading='lazy' />
@@ -92,12 +92,12 @@ export default function Page() {
                     </div>
                   </ItemContent>
                   <ItemActions>
-                    <Button variant="outline" size="sm" className="border-neutral-100 text-[#1F453D] cursor-pointer">
+                    <Button className="border-neutral-100 text-[#1F453D] cursor-pointer">
                       Open to trades
                     </Button>
                   </ItemActions>
                 </Item>
-                <Item variant="outline" className="rounded-xl border-neutral-200 hover:border-neutral-300 hover:cursor-pointer shadow-xs items-start flex flex-col md:flex-row md:items-center">
+                <Item variant="outline" className="rounded-xl border-neutral-100 hover:border-neutral-200 hover:cursor-pointer shadow-xs items-start flex flex-col md:flex-row md:items-center">
                   <ItemContent className="flex flex-col md:flex-row items-start md:items-center gap-4">
                     <div className='relative h-16 w-20 shadow-xs rounded-lg'>
                       <Image src={Bartr} alt='' fill className='object-contain' loading='lazy' />
@@ -110,7 +110,7 @@ export default function Page() {
                     </div>
                   </ItemContent>
                   <ItemActions>
-                    <Button variant="outline" size="sm" className="border-neutral-100 text-[#1F453D] cursor-pointer">
+                    <Button className="border-neutral-100 text-[#1F453D] cursor-pointer">
                       Open to trades
                     </Button>
                   </ItemActions>
@@ -124,7 +124,7 @@ export default function Page() {
       <section className='bg-[#e5e5e5] w-full py-10 md:py-16'>
         <div className='max-w-360 mx-auto px-4 md:px-8 flex flex-col items-center gap-12'>
           <div className='text-center max-w-2xl'>
-            <h1 className='text-neutral-700 text-2xl md:text-3xl lg:text-4xl font-poppins font-normal mb-4'>How Bartr Works</h1>
+            <h1 className='text-neutral-600 text-xl md:text-2xl lg:text-3xl font-poppins font-normal mb-4'>How Bartr Works</h1>
             <p className='text-base text-neutral-700 lg:text-lg mb-4'>Simple, secure, and efficient bartering</p>
           </div>
 
@@ -147,7 +147,7 @@ export default function Page() {
       <section className='bg-[#eeebe7] w-full py-10 md:py-16'>
         <div className='max-w-360 mx-auto px-4 md:px-8 flex flex-col items-center gap-12'>
           <div className='text-center max-w-2xl'>
-            <h1 className='text-neutral-700 text-2xl md:text-3xl lg:text-4xl font-poppins font-normal mb-4'>Ready to Start Trading?</h1>
+            <h1 className='text-neutral-600 text-xl md:text-2xl lg:text-3xl font-poppins font-normal mb-4'>Ready to Start Trading?</h1>
             <p className='text-base text-neutral-700 lg:text-lg mb-4'>Join thousands of users exchanging value without money</p>
             <Button className='rounded-lg bg-white text-neutral-700 cursor-pointer shadow-neutral-300 shadow-xs hover:shadow-sm px-3 lg:px-5' onClick={() => router.push('/auth')}>Create Free Account</Button>
           </div>

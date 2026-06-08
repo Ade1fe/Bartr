@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../ui/navigation-menu';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Bartr_bg } from '@/assets';
@@ -10,14 +9,20 @@ import { redirect, useRouter, usePathname } from 'next/navigation';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
 import { Menu } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import NotificationBell from './../notificationBell/index';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 const navItems = [
+  { label: 'Dashboard', href: '/dashboard' },
   { label: 'Marketplace', href: '/marketplace' },
-  { label: 'How It Works', href: '/how-it-works' },
+  { label: 'My Trades', href: '/my-trades' },
+  { label: 'Messages', href: '/messages' },
   { label: 'Community', href: '/community' },
+  // { label: 'Credits', href: '/credits' },
 ];
 
-export default function Header() {
+export default function MarketplaceHeader() {
   const isMobile = useIsMobile();
   const router = useRouter();
   const pathname = usePathname();
@@ -67,38 +72,30 @@ export default function Header() {
   }
 
   return (
-    <header className={`z-50 flex shadow-b-sm shadow-neutral-50 bg-white ${isMobile ? 'min-h-screen flex-col items-start justify-start w-[80%] py-5 px-4' : 'h-16 items-center w-full sticky top-0 px-4 lg:px-8 gap-6'}`}>
+    <header className={`z-50 flex shadow-b-sm shadow-neutral-50 bg-white ${isMobile ? 'min-h-screen flex-col items-start justify-start w-[80%] py-5 px-4' : 'h-16 items-center justify-between w-full sticky top-0 px-4 lg:px-8 gap-6'}`}>
       <div className="relative h-16 w-24">
         <Image src={Bartr_bg} fill className="object-contain hover:cursor-pointer" loading='lazy' alt="Bartr" onClick={() => redirect('/home')} />
       </div>
 
-      <NavigationMenu className={`max-w-none hidden md:flex ${isMobile ? 'items-start justify-start' : 'mx-auto'}`}>
-        <NavigationMenuList className={`gap-8 font-inter font-medium lg:gap-14 ${isMobile ? "flex-col" : "flex-wrap"}`}>
-          <NavigationMenuItem className={`hover:cursor-pointer ${pathname === '/marketplace' ? 'text-[#86B7A9]' : 'text-neutral-500 hover:text-[#86B7A9]'}`}>
-            <NavigationMenuLink asChild>
-              <Link href="/marketplace">Marketplace</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem className={`hover:cursor-pointer ${pathname === '/how-it-works' ? 'text-[#86B7A9]' : 'text-neutral-500 hover:text-[#86B7A9]'}`}>
-            <NavigationMenuLink asChild>
-              <Link href="/how-it-works">How It Works</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem className={`hover:cursor-pointer ${pathname === '/community' ? 'text-[#86B7A9]' : 'text-neutral-500 hover:text-[#86B7A9]'}`}>
-            <NavigationMenuLink asChild>
-              <Link href="/community">Community</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+      <div className='flex items-center gap-2'>
+        <NotificationBell />
 
-      <div className='hidden md:flex items-center gap-4'>
-        <Button variant='outline' className='w-full border-none shadow-none hover:shadow-sm cursor-pointer' onClick={() => router.push('/auth') }>
-          Sign In
-        </Button>
-        <Button className='w-full bg-black text-white border-none shadow-sm cursor-pointer' onClick={() => router.push('/auth')}>
-          Sign Up
-        </Button>
+        <DropdownMenu modal={false}>
+          <DropdownMenuTrigger>
+            <Avatar className='size-8 cursor-pointer'>
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className='bg-white border-none outline-none'>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem>Billing</DropdownMenuItem>
+            <DropdownMenuItem>Team</DropdownMenuItem>
+            <DropdownMenuItem>Subscription</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   )

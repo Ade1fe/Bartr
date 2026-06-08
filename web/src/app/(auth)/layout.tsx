@@ -1,6 +1,6 @@
-import AuthHeader from "@/components/Headers/authHeader";
+import AuthHeader from "@/components/headers/authHeader";
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
