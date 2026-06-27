@@ -5,21 +5,89 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card
 import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import Link from "next/link";
+import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { clientAuth } from "@/lib/firebase-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Eye, EyeClosed } from "lucide-react";
 
 export default function SignInForm() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(clientAuth, email, password);
+
+      const token = await userCredential.user.getIdToken();
+      const { creationTime, lastSignInTime } = userCredential.user.metadata;
+      const isFirstSignIn = creationTime === lastSignInTime;
+
+      const sessionRes = await fetch('/api/auth/session', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        }
+      })
+      
+
+      if (!sessionRes) {
+        toast.error('Failed to create session');
+        throw new Error('Failed to create session');
+      }
+
+      toast.success(isFirstSignIn ? "You're all set. Let's get trading." : "Good to see you again.");
+      router.push('/home');
+    }
+    catch (err: any) {
+      const errorMessage: Record<string, string> = {
+        'auth/invalid-credential': 'Invalid email or password',
+        'auth/user-not-found': 'No account found with this email',
+        'auth/wrong-password': 'Incorrect password',
+        'auth/too-many-requests': 'Too many attempts. Please try again later',
+        'auth/user-disabled': 'This account has been disabled',
+      }
+      setError(errorMessage[err.code] ?? 'Sign in failed. Please try again.');
+      toast.error(errorMessage[err.code] ?? 'Sign in failed. Please try again.');
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <Card className='rounded-lg shadow-xs ring-0 border-neutral-100 px-4 py-8'>
       <CardHeader className='p-0 mb-8'>
         <CardTitle className='font-normal text-2xl font-outfit text-neutral-600'>Welcome Back</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-6 p-0 mb-8">
+        {error && (
+          <p className='text-sm text-red-500 bg-red-50 px-3 py-2 rounded-md'>
+            {error}
+          </p>
+        )}
         <div className="grid gap-3">
           <Label htmlFor="email" className='text-neutral-600'>Email</Label>
-          <Input id="email" placeholder="you@example.com" type='email' className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+          <Input id="email" placeholder="you@example.com" type='email' value={email} onChange={e => setEmail(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
         </div>
         <div className="grid gap-3">
           <Label htmlFor="password" className='text-neutral-600'>Password</Label>
-          <Input id="password" placeholder="**********" type='password' className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+          <div className="relative">
+            <Input id="password" placeholder="**********" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 transform -translate-y-1/2 text-neutral-500 cursor-pointer" >
+              {showPassword ? ( <EyeClosed size={20} /> ) : ( <Eye size={20} /> )}
+            </button>
+          </div>
         </div>
       </CardContent>
       <CardFooter className="grid gap-6 w-full p-0">
@@ -30,7 +98,7 @@ export default function SignInForm() {
           </div>
           <Link href='/forgotPassword' className='p-0 text-sm font-normal text-blue-600 hover:text-blue-800 underline underline-offset-2'>Forgot password?</Link>
         </div>
-        <Button className='rounded-lg bg-black text-white cursor-pointer shadow-black/20 shadow-xs hover:shadow-sm px-3 lg:px-5'>Sign In</Button>
+        <Button onClick={handleSubmit} disabled={loading || !email || !password} className='rounded-lg bg-black text-white cursor-pointer shadow-black/20 shadow-xs hover:shadow-sm px-3 lg:px-5'>{loading ? 'Signing in...' : 'Sign In'}</Button>
       </CardFooter>
     </Card>
   )

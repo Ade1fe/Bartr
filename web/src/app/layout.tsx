@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Outfit, Poppins } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
+import { Toaster, toast } from 'sonner';
 import { ThemeProvider } from "@/components/theme-provider";
 import QueryProvider from "@/components/providers";
 
@@ -42,6 +43,7 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             {children}
           </ThemeProvider>
+          <Toaster richColors position="top-right" />
         </QueryProvider>
       </body>
     </html>

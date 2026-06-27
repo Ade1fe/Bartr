@@ -12,18 +12,55 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import { MapPin, CloudUpload, CheckCircle2, X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { clientAuth } from "@/lib/firebase-client";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { toast } from "sonner";
+import { Eye, EyeClosed } from "lucide-react";
 
 export default function SignUpForm() {
   const router = useRouter();
+  
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [location, setLocation] = useState('');
+  const [bio, setBio] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+
   const [currentStep, setCurrentStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
   const [verificationPhoto, setVerificationPhoto] = useState<File | null>(null);
-  const [verificationId, setVerificationId] = useState<File | null>(null);
+
+  const profileUpload = useImageUpload({ type: 'profiles' });
+  const idDocUpload = useImageUpload({ type: 'idDocuments' });
 
   const handleNext = (e?: React.FormEvent) => {
     e?.preventDefault();
+    setError(null);
+
+    if (currentStep === 1) {
+      if (!firstName || !lastName || !email || !password) {
+        setError('Please fill in all required fields')
+        return
+      }
+      if (!agreedToTerms) {
+        setError('Please agree to the Terms of Service')
+        return
+      }
+      if (password.length < 8) {
+        setError('Password must be at least 8 characters')
+        return
+      }
+    }
+
     if (currentStep < 2) {
-      console.log('clicking next');
       setCurrentStep(currentStep + 1);
     }
   }
@@ -33,6 +70,87 @@ export default function SignUpForm() {
       setCurrentStep(currentStep - 1);
     }
   }
+
+
+  async function handleCompleteRRegistration(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(clientAuth, email, password);
+      const user = userCredential.user
+
+      await updateProfile(user, {
+        displayName: `${firstName} ${lastName}`
+      })
+
+      let profilePhotoUrl: string | null = null;
+      if (profilePhoto) {
+        profilePhotoUrl = await profileUpload.upload(profilePhoto);
+      }
+
+      let idDocumentUrl: string | null = null
+      if (verificationPhoto) {
+        idDocumentUrl = await idDocUpload.upload(verificationPhoto);
+      }
+
+      const token = await user.getIdToken();
+
+      const createUserRes = await fetch('/api/users/create', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          phoneNumber,
+          location,
+          bio,
+          profilePhotoUrl,
+          idDocumentUrl,
+        }),
+      })
+
+      if (!createUserRes.ok) {
+        const errorData = await createUserRes.json();
+        toast.error(errorData.error ?? 'Failed to create user profile');
+        throw new Error(errorData.error ?? 'Failed to create user profile');
+      }
+
+      const sessionRes = await fetch('/api/auth/session', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!sessionRes.ok) {
+        toast.error('Failed to create session');
+        throw new Error('Failed to create session');
+      }
+
+      toast.success("Account created. Let's trade.")
+    }
+    catch (err: any) {
+      const errorMessages: Record<string, string> = {
+        'auth/email-already-in-use': 'An account with this email already exists',
+        'auth/invalid-email': 'Please enter a valid email address',
+        'auth/weak-password': 'Password must be at least 6 characters',
+      }
+
+      toast.error(errorMessages[err.code] ?? err.message ?? 'Registration failed. Please try again.')
+      setError(errorMessages[err.code] ?? err.message ?? 'Registration failed. Please try again.')
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+
 
   const handleFileSelect = ( event: React.ChangeEvent<HTMLInputElement>,  setter: React.Dispatch<React.SetStateAction<File | null>> ) => {
     const file = event.target.files?.[0];
@@ -65,33 +183,44 @@ export default function SignUpForm() {
         )}
       </CardHeader>
       <CardContent className="grid gap-6 p-0 mb-8">
+        {error && (
+          <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-md">
+            {error}
+          </p>
+        )}
+
         {currentStep === 1 && (
           <FieldSet>
             <FieldGroup>
               <Field className='grid md:grid-cols-2 gap-2'>
                 <div className="grid gap-3">
                   <Label htmlFor="firstName" className='text-neutral-600'>First Name</Label>
-                  <Input id="firstName" type="text" placeholder="Pedro" className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+                  <Input id="firstName" type="text" placeholder="Pedro" value={firstName} onChange={e => setFirstName(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
                 </div>
                 <div className="grid gap-3">
                   <Label htmlFor="lastName" className='text-neutral-600'>Last Name</Label>
-                  <Input id="lastName" type="text" placeholder="Duarte" className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+                  <Input id="lastName" type="text" placeholder="Duarte" value={lastName} onChange={e => setLastName(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
                 </div>
               </Field>
 
               <Field className="grid gap-3">
                 <Label htmlFor="email" className='text-neutral-600'>Email</Label>
-                <Input id="email" placeholder="you@example.com" type='email' className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+                <Input id="email" placeholder="you@example.com" type='email' value={email} onChange={e => setEmail(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
               </Field>
 
               <Field className="grid gap-3">
                 <Label htmlFor="phoneNumber" className='text-neutral-600'>Phone Number</Label>
-                <Input id="phoneNumber" placeholder="+1 (5555) 000-0000" type='tel' className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+                <Input id="phoneNumber" placeholder="+1 (5555) 000-0000" type='tel' value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
               </Field>
 
               <Field className="grid gap-3">
                 <Label htmlFor="password" className='text-neutral-600'>Password</Label>
-                <Input id="password" type="password" placeholder='**********' className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+                <div className="relative">
+                  <Input id="password" placeholder="**********" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 transform -translate-y-1/2 text-neutral-500 cursor-pointer" >
+                    {showPassword ? ( <EyeClosed size={20} /> ) : ( <Eye size={20} /> )}
+                  </button>
+                </div>
               </Field>
             </FieldGroup>
           </FieldSet>
@@ -103,7 +232,7 @@ export default function SignUpForm() {
               <Field className='grid gap-3'>
                 <FieldLabel htmlFor="location" className='text-neutral-600'>Location</FieldLabel>
                 <InputGroup id="location" className='border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600'>
-                  <InputGroupInput placeholder="City, State" className='text-[0.813rem] md:text-sm border-0 focus:border-0 focus-visible:border-0 outline-0 focus:outline-0 focus-visible:outline-0' />
+                  <InputGroupInput placeholder="City, State" value={location} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocation(e.target.value)} className='text-[0.813rem] md:text-sm border-0 focus:border-0 focus-visible:border-0 outline-0 focus:outline-0 focus-visible:outline-0' />
                   <InputGroupAddon>
                     <MapPin size={16} />
                   </InputGroupAddon>
@@ -112,7 +241,7 @@ export default function SignUpForm() {
 
               <Field className="grid gap-3">
                 <FieldLabel htmlFor="bio" className='text-neutral-600'>Bio</FieldLabel>
-                <Textarea id="bio" placeholder='Tell others about yourself...' className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600 resize-none row-span-12' />
+                <Textarea id="bio" placeholder='Tell others about yourself...' value={bio} onChange={e => setBio(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600 resize-none row-span-12' />
               </Field>
 
               <Field className="grid gap-3">
@@ -194,7 +323,7 @@ export default function SignUpForm() {
       <CardFooter className="grid gap-6 w-full p-0">
         {currentStep === 1 && (
           <div className="flex items-center gap-1">
-            <Checkbox id="agreeTerms" className='cursor-pointer border-neutral-400' />
+            <Checkbox id="agreeTerms" checked={agreedToTerms} onCheckedChange={(checked) => setAgreedToTerms(checked === true)} className='cursor-pointer border-neutral-400' />
             <Label htmlFor="agreeTerms" className='text-neutral-600'>I agree to the Terms of Service and Privacy Policy</Label>
           </div>
         )}
@@ -204,8 +333,8 @@ export default function SignUpForm() {
         :
         (
           <div className='grid md:grid-cols-2 gap-2'>
-            <Button type='button' onClick={() => handleBack()} className='rounded-lg bg-white text-neutral-600 cursor-pointer shadow-neutral-300 shadow-xs hover:shadow-sm px-3 lg:px-5'>Back</Button>
-            <Button type='submit' onClick={() => handleNext()} className='rounded-lg bg-black text-white cursor-pointer shadow-black/20 shadow-xs hover:shadow-sm px-3 lg:px-5'>Complete Registration</Button>
+            <Button type='button' onClick={handleBack} className='rounded-lg bg-white text-neutral-600 cursor-pointer shadow-neutral-300 shadow-xs hover:shadow-sm px-3 lg:px-5'>Back</Button>
+            <Button type='submit' onClick={handleCompleteRRegistration} disabled={loading} className='rounded-lg bg-black text-white cursor-pointer shadow-black/20 shadow-xs hover:shadow-sm px-3 lg:px-5'>{loading ? 'Creating account...' : 'Complete Registration'}</Button>
           </div>
         )}
       </CardFooter>

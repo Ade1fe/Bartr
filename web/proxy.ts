@@ -13,7 +13,7 @@ const protectedROutes = [
 
 const authROutes = ['/auth'];
 
-export function middleware (req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const token = req.cookies.get('session')?.value;

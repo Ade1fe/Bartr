@@ -44,8 +44,9 @@ export function useImageUpload(options: UploadOptions) {
     setState({ uploading: true, progress: 0, error: null, url: null })
 
     try {
+      // const currentUser = (clientAuth as any).currentUser;
       const { currentUser } = clientAuth;
-      
+
       if (!currentUser) {
         throw new Error('You must be signed in to upload images')
       }
@@ -72,16 +73,21 @@ export function useImageUpload(options: UploadOptions) {
         throw new Error(errorData.error ?? 'Failed to get upload signature')
       }
 
-      const { signature, timestamp, folder, api_key, cloud_name } = await signRes.json();
+      const { timestamp, folder, api_key, cloud_name, upload_preset } = await signRes.json();
+
+      if (!cloud_name) {
+        throw new Error('Cloudinary cloud name is missing')
+      }
 
       setState(prev => ({ ...prev, progress: 25 }))
 
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('signature', signature)
+      // formData.append('signature', signature)
       formData.append('timestamp', String(timestamp))
       formData.append('api_key', api_key)
       formData.append('folder', folder)
+      formData.append('upload_preset', upload_preset)
 
       setState(prev => ({ ...prev, progress: 50 }))
 
