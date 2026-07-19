@@ -13,7 +13,7 @@ const createUserSchema = z.object({
   phoneNumber: z.string().optional(),
   location: z.string().optional(),
   bio: z.string().max(300).optional(),
-  profilePhotoUrl: z.string().url().nullable().optional(),
+  photoURL: z.string().url().nullable().optional(),
   idDocumentUrl: z.string().url().nullable().optional(),
 })
 
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       phoneNumber: validated.phoneNumber ?? null,
       location: validated.location ?? null,
       bio: validated.bio ?? null,
-      profilePhotoUrl: validated.profilePhotoUrl ?? null,
+      photoURL: validated.photoURL ?? null,
       idDocumentUrl: validated.idDocumentUrl ?? null,
 
       // Platform fields — set by server, never by client

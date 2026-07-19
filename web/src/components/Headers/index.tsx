@@ -6,7 +6,7 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuL
 import Link from 'next/link';
 import Image from 'next/image';
 import { Bartr_bg } from '@/assets';
-import { redirect, useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
 import { Menu, Bell, LogOut, User, Settings, LayoutDashboard, ArrowLeftRight } from 'lucide-react';
@@ -70,7 +70,7 @@ export default function Header() {
 
             <DropdownMenuItem className="cursor-pointer text-neutral-600 hover:text-neutral-900" onClick={() => router.push(`/profile/${user?.uid}`)} >
               <User className="mr-2 h-4 w-4" />
-              My Profile
+              Profile
             </DropdownMenuItem>
 
             <DropdownMenuItem className="cursor-pointer text-neutral-600 hover:text-neutral-900" onClick={() => router.push('/dashboard')} >
@@ -165,7 +165,7 @@ export default function Header() {
                           </div>
                           <Button variant='outline' className='w-full border-neutral-200 cursor-pointer text-neutral-600' onClick={() => { setIsOpen(false); router.push(`/profile/${user.uid}`) }} >
                             <User className="mr-2 h-4 w-4" />
-                            My Profile
+                            Profile
                           </Button>
                           <Button className='w-full bg-red-50 text-red-500 border-none shadow-none cursor-pointer hover:bg-red-100' onClick={() => { setIsOpen(false); signOut() }} >
                             <LogOut className="mr-2 h-4 w-4" />
@@ -197,7 +197,7 @@ export default function Header() {
   return (
     <header className={`z-50 flex shadow-b-sm shadow-neutral-50 bg-white ${isMobile ? 'min-h-screen flex-col items-start justify-start w-[80%] py-5 px-4' : 'h-16 items-center w-full sticky top-0 px-4 lg:px-8 gap-6'}`}>
       <div className="relative h-16 w-24">
-        <Image src={Bartr_bg} fill className="object-contain hover:cursor-pointer" loading='lazy' alt="Bartr" onClick={() => redirect('/home')} />
+        <Image src={Bartr_bg} fill className="object-contain hover:cursor-pointer" loading='lazy' alt="Bartr" onClick={() => router.push('/')} />
       </div>
 
       <NavigationMenu className={`max-w-none hidden md:flex ${isMobile ? 'items-start justify-start' : 'mx-auto'}`}>

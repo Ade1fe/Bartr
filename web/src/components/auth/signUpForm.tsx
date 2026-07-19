@@ -81,14 +81,16 @@ export default function SignUpForm() {
       const userCredential = await createUserWithEmailAndPassword(clientAuth, email, password);
       const user = userCredential.user
 
-      await updateProfile(user, {
-        displayName: `${firstName} ${lastName}`
-      })
-
-      let profilePhotoUrl: string | null = null;
+      
+      let photoURL: string | null = null;
       if (profilePhoto) {
-        profilePhotoUrl = await profileUpload.upload(profilePhoto);
+        photoURL = await profileUpload.upload(profilePhoto);
       }
+      
+      await updateProfile(user, {
+        displayName: `${firstName} ${lastName}`,
+        photoURL: photoURL ?? undefined,
+      })
 
       let idDocumentUrl: string | null = null
       if (verificationPhoto) {
@@ -110,7 +112,7 @@ export default function SignUpForm() {
           phoneNumber,
           location,
           bio,
-          profilePhotoUrl,
+          photoURL,
           idDocumentUrl,
         }),
       })
@@ -134,7 +136,8 @@ export default function SignUpForm() {
         throw new Error('Failed to create session');
       }
 
-      toast.success("Account created. Let's trade.")
+      toast.success("Account created. Let's trade.");
+      router.push('/')
     }
     catch (err: any) {
       const errorMessages: Record<string, string> = {
