@@ -327,7 +327,7 @@ export default function SignUpForm() {
         {currentStep === 1 && (
           <div className="flex items-center gap-1">
             <Checkbox id="agreeTerms" checked={agreedToTerms} onCheckedChange={(checked) => setAgreedToTerms(checked === true)} className='cursor-pointer border-neutral-400' />
-            <Label htmlFor="agreeTerms" className='text-neutral-600'>I agree to the Terms of Service and Privacy Policy</Label>
+            <Label htmlFor="agreeTerms" className='text-neutral-600'>I agree to the <a href="legal/terms" className='underline cursor-pointer'>Terms of Service</a> and <a href="legal/privacy" className='underline cursor-pointer'>Privacy Policy</a></Label>
           </div>
         )}
         {currentStep === 1 ? (

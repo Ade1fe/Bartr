@@ -32,9 +32,10 @@ export default function Footer() {
           <div>
             <div className="mb-4">Legal</div>
             <div className="flex flex-col gap-2 text-sm">
-              <div className="cursor-pointer hover:text-white">Privacy</div>
-              <Link href='/terms' className="cursor-pointer hover:text-white">Terms</Link>
-              <Link href='/guidelines' className="cursor-pointer hover:text-white">Guidelines</Link>
+              <Link href='/legal/privacy' className="cursor-pointer hover:text-white">Privacy</Link>
+              <Link href='/legal/terms' className="cursor-pointer hover:text-white">Terms</Link>
+              <Link href='/legal/dispute-resolution' className="cursor-pointer hover:text-white">Dispute Resolution</Link>
+              <Link href='/legal/prohibited-items' className="cursor-pointer hover:text-white">Prohibited Items</Link>
             </div>
           </div>
         </div>

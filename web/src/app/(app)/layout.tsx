@@ -1,4 +1,4 @@
-import MarketplaceHeader from "@/components/headers/marketplaceHeader";
+import Header from "@/components/headers";
 
 export default function Layout({
   children,
@@ -7,7 +7,7 @@ export default function Layout({
 }>) {
   return (
     <div className="min-h-screen bg-white flex flex-col transition-colors ease-in-out duration-300">
-      <MarketplaceHeader />
+      <Header />
       <main className="relative z-10 flex-1">
         {children}
       </main>
