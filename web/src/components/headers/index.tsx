@@ -380,7 +380,7 @@ export default function Header({ variant = 'default' }: { variant?: HeaderVarian
   function UnauthenticatedActions({ onNavigate }: { onNavigate?: () => void }) {
     return (
       <div className='flex items-center gap-3'>
-        <Button variant='outline' className='border-none shadow-none hover:shadow-sm cursor-pointer' onClick={() => { onNavigate?.(); router.push('/auth'); }}>
+        <Button variant='outline' className='text-neutral-500 border-none shadow-none hover:shadow-sm cursor-pointer' onClick={() => { onNavigate?.(); router.push('/auth'); }}>
           Sign In
         </Button>
         <Button className='bg-black text-white border-none shadow-sm cursor-pointer' onClick={() => { onNavigate?.(); router.push('/auth'); }}>
