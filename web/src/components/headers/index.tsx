@@ -406,7 +406,7 @@ export default function Header({ variant = 'default' }: { variant?: HeaderVarian
             )}
 
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
+              <SheetTrigger asChild className='text-neutral-500'>
                 <Button variant='ghost' size='icon' className='md:hidden'>
                   <Menu className='h-6 w-6 text-neutral-500' />
                   <span className='sr-only'>Toggle Menu</span>
