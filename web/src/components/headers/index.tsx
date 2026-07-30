@@ -412,7 +412,7 @@ export default function Header({ variant = 'default' }: { variant?: HeaderVarian
                   <span className='sr-only'>Toggle Menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side='right' className='w-75 sm:w-100 bg-white [&>button]:text-neutral-500 [&>button]:border [&>button]:border-neutral-300'>
+              <SheetContent side='right' className='w-75 sm:w-100 bg-white'>
                 <SheetHeader>
                   <SheetTitle></SheetTitle>
                   <SheetDescription></SheetDescription>
