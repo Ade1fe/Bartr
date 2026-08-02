@@ -36,6 +36,14 @@ export async function POST(req: NextRequest) {
       status: 'active',
     })
 
+    // Mark onboarding complete the first time a user successfully creates a listing.
+    // merge: true keeps this safe to call even if the field is already set —
+    // no read-before-write needed, and it won't clobber other user fields.
+    await adminDb.collection('users').doc(userId).set(
+      { onboardingComplete: true },
+      { merge: true }
+    );
+
     return NextResponse.json({ id: listingRef.id }, { status: 201 });
   }
   catch (e) {

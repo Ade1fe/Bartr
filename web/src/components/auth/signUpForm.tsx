@@ -137,7 +137,7 @@ export default function SignUpForm() {
       }
 
       toast.success("Account created. Let's trade.");
-      router.push('/')
+      router.push('/onboarding/listings');
     }
     catch (err: any) {
       const errorMessages: Record<string, string> = {

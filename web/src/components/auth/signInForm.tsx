@@ -46,8 +46,10 @@ export default function SignInForm() {
         throw new Error('Failed to create session');
       }
 
+      const { onboardingComplete } = await sessionRes.json();
+
       toast.success(isFirstSignIn ? "You're all set. Let's get trading." : "Good to see you again.");
-      router.push('/home');
+      router.push(onboardingComplete ? '/home' : '/onboarding/listings');
     }
     catch (err: any) {
       const errorMessage: Record<string, string> = {

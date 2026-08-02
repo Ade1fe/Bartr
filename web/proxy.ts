@@ -9,6 +9,7 @@ const protectedROutes = [
   '/notifications',
   '/credits',
   '/marketplace',
+  '/onboarding',
 ];
 
 const authROutes = ['/auth'];

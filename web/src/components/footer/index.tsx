@@ -35,7 +35,6 @@ export default function Footer() {
               <Link href='/legal/privacy' className="cursor-pointer hover:text-white">Privacy</Link>
               <Link href='/legal/terms' className="cursor-pointer hover:text-white">Terms</Link>
               <Link href='/legal/dispute-resolution' className="cursor-pointer hover:text-white">Dispute Resolution</Link>
-              <Link href='/legal/prohibited-items' className="cursor-pointer hover:text-white">Prohibited Items</Link>
             </div>
           </div>
         </div>
