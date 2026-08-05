@@ -11,6 +11,7 @@ import { clientAuth } from "@/lib/firebase-client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Eye, EyeClosed } from "lucide-react";
+import Loader from "../loader";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -32,6 +33,9 @@ export default function SignInForm() {
       const { creationTime, lastSignInTime } = userCredential.user.metadata;
       const isFirstSignIn = creationTime === lastSignInTime;
 
+      const idTokenResult = await userCredential.user.getIdTokenResult();
+      const otpVerified = idTokenResult.claims.otpVerified === true;
+
       const sessionRes = await fetch('/api/auth/session', {
         method: "POST",
         headers: {
@@ -41,15 +45,23 @@ export default function SignInForm() {
       })
       
 
-      if (!sessionRes) {
-        toast.error('Failed to create session');
+      if (!sessionRes.ok) {
         throw new Error('Failed to create session');
       }
 
       const { onboardingComplete } = await sessionRes.json();
 
       toast.success(isFirstSignIn ? "You're all set. Let's get trading." : "Good to see you again.");
-      router.push(onboardingComplete ? '/home' : '/onboarding/listings');
+
+      if (!otpVerified) {
+        router.push('/verify-email');
+      }
+      else if (!onboardingComplete) {
+        router.push('/onboarding/listings');
+      }
+      else {
+        router.push('/home');
+      }
     }
     catch (err: any) {
       const errorMessage: Record<string, string> = {
@@ -68,40 +80,48 @@ export default function SignInForm() {
   }
 
   return (
-    <Card className='rounded-lg shadow-xs ring-0 border-neutral-100 px-4 py-8'>
-      <CardHeader className='p-0 mb-8'>
-        <CardTitle className='font-normal text-2xl font-outfit text-neutral-600'>Welcome Back</CardTitle>
-      </CardHeader>
-      <CardContent className="grid gap-6 p-0 mb-8">
-        {error && (
-          <p className='text-sm text-red-500 bg-red-50 px-3 py-2 rounded-md'>
-            {error}
-          </p>
-        )}
-        <div className="grid gap-3">
-          <Label htmlFor="email" className='text-neutral-600'>Email</Label>
-          <Input id="email" placeholder="you@example.com" type='email' value={email} onChange={e => setEmail(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+    <>
+      {loading && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-[1px]'>
+          <Loader type="bars" color="#A5B6B1" height={30} width={30} />
         </div>
-        <div className="grid gap-3">
-          <Label htmlFor="password" className='text-neutral-600'>Password</Label>
-          <div className="relative">
-            <Input id="password" placeholder="**********" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 transform -translate-y-1/2 text-neutral-500 cursor-pointer" >
-              {showPassword ? ( <EyeClosed size={20} /> ) : ( <Eye size={20} /> )}
-            </button>
+      )}
+
+      <Card className='rounded-lg shadow-xs ring-0 border-neutral-100 px-4 py-8'>
+        <CardHeader className='p-0 mb-8'>
+          <CardTitle className='font-normal text-2xl font-outfit text-neutral-600'>Welcome Back</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-6 p-0 mb-8">
+          {error && (
+            <p className='text-sm text-red-500 bg-red-50 px-3 py-2 rounded-md'>
+              {error}
+            </p>
+          )}
+          <div className="grid gap-3">
+            <Label htmlFor="email" className='text-neutral-600'>Email</Label>
+            <Input id="email" placeholder="you@example.com" type='email' value={email} onChange={e => setEmail(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
           </div>
-        </div>
-      </CardContent>
-      <CardFooter className="grid gap-6 w-full p-0">
-        <div className='items-center justify-between flex w-full p-0'>
-          <div className="flex items-center gap-1">
-            <Checkbox id="rememberMe" className='cursor-pointer border-neutral-400' />
-            <Label htmlFor="rememberMe" className='text-neutral-600'>Remember me</Label>
+          <div className="grid gap-3">
+            <Label htmlFor="password" className='text-neutral-600'>Password</Label>
+            <div className="relative">
+              <Input id="password" placeholder="**********" type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} className='text-[0.813rem] md:text-sm border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600' />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 transform -translate-y-1/2 text-neutral-500 cursor-pointer" >
+                {showPassword ? ( <EyeClosed size={20} /> ) : ( <Eye size={20} /> )}
+              </button>
+            </div>
           </div>
-          <Link href='/forgotPassword' className='p-0 text-sm font-normal text-blue-600 hover:text-blue-800 underline underline-offset-2'>Forgot password?</Link>
-        </div>
-        <Button onClick={handleSubmit} disabled={loading || !email || !password} className='rounded-lg bg-black text-white cursor-pointer shadow-black/20 shadow-xs hover:shadow-sm px-3 lg:px-5'>{loading ? 'Signing in...' : 'Sign In'}</Button>
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter className="grid gap-6 w-full p-0">
+          <div className='items-center justify-between flex w-full p-0'>
+            <div className="flex items-center gap-1">
+              <Checkbox id="rememberMe" className='cursor-pointer border-neutral-400' />
+              <Label htmlFor="rememberMe" className='text-neutral-600'>Remember me</Label>
+            </div>
+            <Link href='/forgotPassword' className='p-0 text-sm font-normal text-blue-600 hover:text-blue-800 underline underline-offset-2'>Forgot password?</Link>
+          </div>
+          <Button onClick={handleSubmit} disabled={loading || !email || !password} className='rounded-lg bg-black text-white cursor-pointer shadow-black/20 shadow-xs hover:shadow-sm px-3 lg:px-5'>{loading ? 'Signing in...' : 'Sign In'}</Button>
+        </CardFooter>
+      </Card>
+    </>
   )
 }

@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
-import { adminDb } from "@/lib/firebase-admin";
+import { adminDb, adminAuth } from "@/lib/firebase-admin";
 import { verifyToken } from "@/lib/auth";
 import { handleApiError, AppError } from "@/lib/errors";
 import { isOtpExpired, verifyOtpHash, MAX_ATTEMPTS } from "@/lib/otp";
-import { toast } from "sonner";
 import { z } from 'zod';
 
 const schema = z.object({
@@ -23,14 +22,12 @@ export async function POST(req: NextRequest) {
 
     if (!userDoc.exists) {
       throw new AppError("User not found", 404);
-      toast.error("User not found");
     }
 
     const user = userDoc.data()!;
 
     if (!user.otpHash || !user.pendingEmailVerification) {
       throw new AppError('No pending email verification found. Please request a new code.', 400);
-      toast.error('No pending email verification found. Please request a new code.');
     }
 
     if (isOtpExpired(user.otpExpiresAt)) {
@@ -40,12 +37,11 @@ export async function POST(req: NextRequest) {
         otpAttempts: FieldValue.delete(),
         pendingEmailVerification: FieldValue.delete(),
       })
-      toast.error('OTP has expired. Please request a new code.');
+      throw new AppError('OTP has expired. Please request a new code.', 400);
     }
 
     const attempts = user.otpAttempts ?? 0;
     if (attempts >= MAX_ATTEMPTS) {
-      toast.error('Maximum attempts exceeded. Please request a new verification code.');
       throw new AppError('Maximum attempts exceeded. Please request a new verification code.', 400);
     }
 
@@ -57,8 +53,7 @@ export async function POST(req: NextRequest) {
       });
 
       const remaining = MAX_ATTEMPTS - (attempts + 1);
-      toast.error('Invalid OTP. Please try again.');
-      throw new AppError(`Invalid OTP. ${remaining} attempts${remaining === 1 ? '' : 's'} remaining`, 400);
+      throw new AppError(`Invalid OTP. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining`, 400);
     }
 
     await userRef.update({
@@ -71,6 +66,8 @@ export async function POST(req: NextRequest) {
       otpSendCount: FieldValue.delete(),
       otpWindowStart: FieldValue.delete(),
     })
+
+    await adminAuth.setCustomUserClaims(userId, { otpVerified: true });
 
     return NextResponse.json({
       verified: true,

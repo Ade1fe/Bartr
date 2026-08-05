@@ -23,26 +23,36 @@ export async function POST(req: NextRequest) {
       updatedAt: new Date().toISOString(),
     })
 
-    await saveListingToIndex({
-      objectID: listingRef.id,
-      title: validated.title,
-      description: validated.description,
-      category: validated.category,
-      offerTags: validated.offerTags,
-      wantTags: validated.wantTags,
-      creditValue: validated.creditValue,
-      condition: validated.condition,
-      userId,
-      status: 'active',
-    })
+    try {
+      await saveListingToIndex({
+        objectID: listingRef.id,
+        title: validated.title,
+        description: validated.description,
+        category: validated.category,
+        offerTags: validated.offerTags,
+        wantTags: validated.wantTags,
+        creditValue: validated.creditValue,
+        condition: validated.condition,
+        userId,
+        status: 'active',
+      })
+    }
+    catch (indexErr) {
+      console.error(`[listings/create] Algolia sync failed for ${listingRef.id}`, indexErr);
+    }
 
     // Mark onboarding complete the first time a user successfully creates a listing.
     // merge: true keeps this safe to call even if the field is already set —
     // no read-before-write needed, and it won't clobber other user fields.
-    await adminDb.collection('users').doc(userId).set(
-      { onboardingComplete: true },
-      { merge: true }
-    );
+    try {
+      await adminDb.collection('users').doc(userId).set(
+        { onboardingComplete: true },
+        { merge: true }
+      );
+    }
+    catch (onboardingErr) {
+      console.error(`[listings/create] onboardingComplete update failed for ${userId}`, onboardingErr);
+    }
 
     return NextResponse.json({ id: listingRef.id }, { status: 201 });
   }

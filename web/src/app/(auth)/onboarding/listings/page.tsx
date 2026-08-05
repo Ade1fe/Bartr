@@ -1,304 +1,3 @@
-// // src/app/(auth)/onboarding/listings/page.tsx
-// 'use client'
-
-// import { useState } from 'react'
-// import { useRouter } from 'next/navigation'
-// import { Button } from '@/components/ui/button'
-// import { Input } from '@/components/ui/input'
-// import { Label } from '@/components/ui/label'
-// import { Textarea } from '@/components/ui/textarea'
-// import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
-// import { CloudUpload, CheckCircle2, X } from 'lucide-react'
-// import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty'
-// import { clientAuth } from '@/lib/firebase-client'
-// import { useImageUpload } from '@/hooks/useImageUpload'
-
-// const CATEGORIES = [
-//   { value: 'electronics', label: 'Electronics' },
-//   { value: 'furniture', label: 'Furniture' },
-//   { value: 'clothing', label: 'Clothing' },
-//   { value: 'books', label: 'Books' },
-//   { value: 'tools', label: 'Tools' },
-//   { value: 'sports', label: 'Sports' },
-//   { value: 'food', label: 'Food' },
-//   { value: 'collectibles', label: 'Collectibles' },
-//   { value: 'other', label: 'Other' },
-// ]
-
-// const CONDITIONS = [
-//   { value: 'new', label: 'New' },
-//   { value: 'like_new', label: 'Like New' },
-//   { value: 'good', label: 'Good' },
-//   { value: 'fair', label: 'Fair' },
-//   { value: 'poor', label: 'Poor' },
-// ]
-
-// export default function OnboardingListingsPage() {
-//   const router = useRouter()
-
-//   const [title, setTitle] = useState('')
-//   const [description, setDescription] = useState('')
-//   const [category, setCategory] = useState('')
-//   const [condition, setCondition] = useState('')
-//   const [offerTags, setOfferTags] = useState('')
-//   const [wantTags, setWantTags] = useState('')
-//   const [creditValue, setCreditValue] = useState(0)
-//   const [photos, setPhotos] = useState<File[]>([])
-//   const [loading, setLoading] = useState(false)
-//   const [error, setError] = useState<string | null>(null)
-
-//   const photoUpload = useImageUpload({ type: 'listings' })
-
-//   async function handleSubmit(e: React.FormEvent) {
-//     e.preventDefault()
-//     setLoading(true)
-//     setError(null)
-
-//     try {
-//       const token = await clientAuth.currentUser?.getIdToken()
-//       if (!token) throw new Error('Not authenticated')
-
-//       // Upload all photos to Cloudinary
-//       const photoUrls: string[] = []
-//       for (const photo of photos) {
-//         const url = await photoUpload.upload(photo)
-//         if (url) photoUrls.push(url)
-//       }
-
-//       // Parse tags — split by comma and trim whitespace
-//       const parsedOfferTags = offerTags
-//         .split(',')
-//         .map(t => t.trim())
-//         .filter(Boolean)
-
-//       const parsedWantTags = wantTags
-//         .split(',')
-//         .map(t => t.trim())
-//         .filter(Boolean)
-
-//       // Create the listing via API route
-//       const res = await fetch('/api/listings/create', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': `Bearer ${token}`,
-//         },
-//         body: JSON.stringify({
-//           title,
-//           description,
-//           category,
-//           condition,
-//           offerTags: parsedOfferTags,
-//           wantTags: parsedWantTags,
-//           creditValue: Number(creditValue),
-//           photos: photoUrls,
-//         }),
-//       })
-
-//       if (!res.ok) {
-//         const data = await res.json()
-//         throw new Error(data.error ?? 'Failed to create listing')
-//       }
-
-//       // Registration complete — redirect to dashboard
-//       router.push('/dashboard')
-
-//     } catch (err: any) {
-//       setError(err.message ?? 'Something went wrong')
-//     } finally {
-//       setLoading(false)
-//     }
-//   }
-
-//   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
-//     const files = Array.from(e.target.files ?? [])
-//     setPhotos(prev => [...prev, ...files].slice(0, 5)) // max 5
-//   }
-
-//   function handleDrop(e: React.DragEvent<HTMLDivElement>) {
-//     e.preventDefault()
-//     const files = Array.from(e.dataTransfer.files).filter(f =>
-//       ['image/png', 'image/jpeg', 'image/webp'].includes(f.type)
-//     )
-//     setPhotos(prev => [...prev, ...files].slice(0, 5))
-//   }
-
-//   function removePhoto(index: number) {
-//     setPhotos(prev => prev.filter((_, i) => i !== index))
-//   }
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4 py-8">
-//       <div className="w-full max-w-md">
-//         {/* Step indicator */}
-//         <div className="flex items-center justify-center gap-2 mb-6">
-//           <div className="h-2 w-8 rounded-full bg-neutral-300" />
-//           <div className="h-2 w-8 rounded-full bg-neutral-300" />
-//           <div className="h-2 w-8 rounded-full bg-black" />
-//         </div>
-
-//         <Card className='rounded-lg shadow-xs border-neutral-100 px-4 py-8'>
-//           <CardHeader className='p-0 mb-8'>
-//             <CardTitle className='font-normal text-2xl text-neutral-600'>
-//               What Do You Offer?
-//             </CardTitle>
-//             <CardDescription className='text-base text-neutral-500'>
-//               Add your first listing to start trading
-//             </CardDescription>
-//           </CardHeader>
-
-//           <CardContent className="grid gap-5 p-0 mb-8">
-//             {error && (
-//               <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-md">
-//                 {error}
-//               </p>
-//             )}
-
-//             {/* Title */}
-//             <div className="grid gap-2">
-//               <Label htmlFor="title" className="text-neutral-600">Title</Label>
-//               <Input id="title" placeholder="e.g. Handmade wooden table" value={title} onChange={e => setTitle(e.target.value)} className="border-neutral-100 shadow-xs text-neutral-600" />
-//             </div>
-
-//             {/* Description */}
-//             <div className="grid gap-2">
-//               <Label htmlFor="description" className="text-neutral-600">Description</Label>
-//               <Textarea id="description" placeholder="Describe what you're offering in detail..." value={description} onChange={e => setDescription(e.target.value)} className="border-neutral-100 shadow-xs text-neutral-600 resize-none min-h-20" />
-//             </div>
-
-//             {/* Category and Condition */}
-//             <div className="grid grid-cols-2 gap-3">
-//               <div className="grid gap-2">
-//                 <Label className="text-neutral-600">Category</Label>
-//                 <select value={category} onChange={e => setCategory(e.target.value)} className="border border-neutral-100 rounded-md px-3 py-2 text-sm text-neutral-600 shadow-xs bg-white focus:outline-none" >
-//                   <option value="">Select...</option>
-//                   {CATEGORIES.map(c => (
-//                     <option key={c.value} value={c.value}>{c.label}</option>
-//                   ))}
-//                 </select>
-//               </div>
-//               <div className="grid gap-2">
-//                 <Label className="text-neutral-600">Condition</Label>
-//                 <select value={condition} onChange={e => setCondition(e.target.value)} className="border border-neutral-100 rounded-md px-3 py-2 text-sm text-neutral-600 shadow-xs bg-white focus:outline-none" >
-//                   <option value="">Select...</option>
-//                   {CONDITIONS.map(c => (
-//                     <option key={c.value} value={c.value}>{c.label}</option>
-//                   ))}
-//                 </select>
-//               </div>
-//             </div>
-
-//             {/* What I offer tags */}
-//             <div className="grid gap-2">
-//               <Label htmlFor="offerTags" className="text-neutral-600">
-//                 What I Offer
-//                 <span className="text-xs text-neutral-400 ml-1">(comma separated)</span>
-//               </Label>
-//               <Input id="offerTags" placeholder="e.g. web design, logo design, photography" value={offerTags} onChange={e => setOfferTags(e.target.value)} className="border-neutral-100 shadow-xs text-neutral-600" />
-//             </div>
-
-//             {/* What I want tags */}
-//             <div className="grid gap-2">
-//               <Label htmlFor="wantTags" className="text-neutral-600">
-//                 What I'm Seeking
-//                 <span className="text-xs text-neutral-400 ml-1">(comma separated)</span>
-//               </Label>
-//               <Input id="wantTags" placeholder="e.g. furniture, gardening tools, lessons" value={wantTags} onChange={e => setWantTags(e.target.value)} className="border-neutral-100 shadow-xs text-neutral-600" />
-//             </div>
-
-//             {/* Credit value */}
-//             <div className="grid gap-2">
-//               <Label htmlFor="creditValue" className="text-neutral-600">
-//                 Credit Value
-//                 <span className="text-xs text-neutral-400 ml-1">(0 = open to offers)</span>
-//               </Label>
-//               <Input id="creditValue" type="number" min={0} max={50000} placeholder="0" value={creditValue} onChange={e => setCreditValue(Number(e.target.value))} className="border-neutral-100 shadow-xs text-neutral-600" />
-//             </div>
-
-//             {/* Photos */}
-//             <div className="grid gap-2">
-//               <Label className="text-neutral-600">
-//                 Photos
-//                 <span className="text-xs text-neutral-400 ml-1">(up to 5)</span>
-//               </Label>
-//               <input type="file" id="listing-photos" accept="image/png,image/jpeg,image/webp" className="hidden" multiple onChange={handleFileSelect} />
-
-//               {/* Show upload area if fewer than 5 photos selected */}
-//               {photos.length < 5 && (
-//                 <Empty onDrop={handleDrop} onDragOver={e => e.preventDefault()} onClick={() => document.getElementById('listing-photos')?.click()} className="border border-dashed border-neutral-200 text-neutral-600 cursor-pointer" >
-//                   <EmptyHeader>
-//                     <EmptyMedia variant="icon"><CloudUpload /></EmptyMedia>
-//                     <EmptyTitle className="text-sm">
-//                       Click to upload or drag and drop
-//                     </EmptyTitle>
-//                     <EmptyDescription className="text-xs">
-//                       PNG, JPG, WebP up to 5MB each
-//                     </EmptyDescription>
-//                   </EmptyHeader>
-//                 </Empty>
-//               )}
-
-//               {/* Photo list */}
-//               {photos.length > 0 && (
-//                 <div className="grid gap-2 mt-1">
-//                   {photos.map((photo, index) => (
-//                     <div key={index} className="border border-neutral-200 rounded-lg p-3 bg-neutral-50 flex items-center justify-between" >
-//                       <div className="flex items-center gap-3">
-//                         <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-//                         <div>
-//                           <p className="text-sm text-neutral-700 truncate max-w-48">{photo.name}</p>
-//                           <p className="text-xs text-neutral-400">
-//                             {(photo.size / 1024 / 1024).toFixed(2)} MB
-//                           </p>
-//                         </div>
-//                       </div>
-//                       <Button type="button" variant="ghost" size="icon" className="h-7 w-7" onClick={() => removePhoto(index)} >
-//                         <X className="h-3 w-3" />
-//                       </Button>
-//                     </div>
-//                   ))}
-//                 </div>
-//               )}
-//             </div>
-//           </CardContent>
-
-//           <CardFooter className="grid grid-cols-2 gap-3 p-0">
-//             <Button type="button" variant="outline" className="border-neutral-200 text-neutral-600" onClick={() => router.push('/dashboard')} >
-//               Skip for now
-//             </Button>
-//             <Button type="button" onClick={handleSubmit} disabled={loading || photoUpload.uploading || !title || !category} className="bg-black text-white" >
-//               {loading || photoUpload.uploading ? 'Creating...' : 'Complete Registration'}
-//             </Button>
-//           </CardFooter>
-//         </Card>
-//       </div>
-//     </div>
-//   )
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // src/app/(auth)/onboarding/listings/page.tsx
 'use client'
 
@@ -315,6 +14,8 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/
 import { clientAuth } from '@/lib/firebase-client'
 import { useImageUpload } from '@/hooks/useImageUpload'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
+import Loader from '@/components/loader'
 
 const CATEGORIES = [
   { value: 'electronics', label: 'Electronics' },
@@ -397,10 +98,14 @@ export default function OnboardingListingsPage() {
         throw new Error(data.error ?? 'Failed to create listing')
       }
 
-      router.push('/dashboard')
-    } catch (err: any) {
+      toast.success('Yayy, your first listing has been successfully created!');
+      router.push('/dashboard');
+    } 
+    catch (err: any) {
+      toast.error(err.message || 'Something went wrong');
       setError(err.message ?? 'Something went wrong')
-    } finally {
+    }
+    finally {
       setLoading(false)
     }
   }
@@ -452,6 +157,12 @@ export default function OnboardingListingsPage() {
     <div className="w-full items-center justify-center">
       <div className="grid gap-8 items-start">
 
+        {loading && (
+          <div className='fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-[1px]'>
+            <Loader type="bars" color="#A5B6B1" height={30} width={30} />
+          </div>
+        )}
+        
         {/* ── Form ─────────────────────────────────────── */}
         <Card className="rounded-2xl shadow-xs border-neutral-100 px-4 py-8">
           <CardHeader className="p-0 text-center mb-8">

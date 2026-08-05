@@ -3,7 +3,7 @@
 import SignInForm from "@/components/auth/signInForm";
 import SignUpForm from "@/components/auth/signUpForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState<"signIn" | "signUp">("signIn");
