@@ -338,7 +338,7 @@ export default function SignUpForm() {
         <CardFooter className="grid gap-6 w-full p-0">
           {currentStep === 1 && (
             <div className="flex items-center gap-1">
-              <Checkbox id="agreeTerms" name='agreeTerms' checked={agreedToTerms} onCheckedChange={(checked: CheckedState) => { setAgreedToTerms(checked === true) }} onClick={() => console.log('click')} className='cursor-pointer text-neutral-400 border-neutral-400' />
+              <Checkbox id="agreeTerms" name='agreeTerms' checked={agreedToTerms} onCheckedChange={(checked: CheckedState) => { setAgreedToTerms(checked === true) }} className='cursor-pointer text-neutral-400 border-neutral-400' />
               <Label htmlFor="agreeTerms" className='text-neutral-600'>I agree to the <a href="legal/terms" className='underline cursor-pointer'>Terms of Service</a> and <a href="legal/privacy" className='underline cursor-pointer'>Privacy Policy</a></Label>
             </div>
           )}
