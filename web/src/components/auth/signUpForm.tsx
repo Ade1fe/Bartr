@@ -18,6 +18,7 @@ import { useImageUpload } from "@/hooks/useImageUpload";
 import { toast } from "sonner";
 import { Eye, EyeClosed } from "lucide-react";
 import Loader from "../loader";
+import { CheckedState } from "@radix-ui/react-checkbox";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -48,15 +49,18 @@ export default function SignUpForm() {
 
     if (currentStep === 1) {
       if (!firstName || !lastName || !email || !password) {
-        setError('Please fill in all required fields')
+        setError('Please fill in all required fields');
+        toast.warning('Please fill in all required fields');
         return
       }
       if (!agreedToTerms) {
-        setError('Please agree to the Terms of Service')
+        setError('Please agree to the Terms of Service');
+        toast.warning('Please agree to the Terms of Service');
         return
       }
       if (password.length < 8) {
-        setError('Password must be at least 8 characters')
+        setError('Password must be at least 8 characters');
+        toast.warning('Password must be at least 8 characters');
         return
       }
     }
@@ -334,7 +338,7 @@ export default function SignUpForm() {
         <CardFooter className="grid gap-6 w-full p-0">
           {currentStep === 1 && (
             <div className="flex items-center gap-1 bg-red-500">
-              <Checkbox id="agreeTerms" name='agreeTerms' checked={agreedToTerms} onCheckedChange={(checked) => setAgreedToTerms(checked === true)} onClick={() => console.log('click')} className='cursor-pointer border-neutral-400' />
+              <Checkbox id="agreeTerms" name='agreeTerms' checked={agreedToTerms} onCheckedChange={(checked: CheckedState) => { setAgreedToTerms(checked === true) }} onClick={() => console.log('click')} className='cursor-pointer border-neutral-400' />
               <Label htmlFor="agreeTerms" className='text-neutral-600'>I agree to the <a href="legal/terms" className='underline cursor-pointer'>Terms of Service</a> and <a href="legal/privacy" className='underline cursor-pointer'>Privacy Policy</a></Label>
             </div>
           )}
