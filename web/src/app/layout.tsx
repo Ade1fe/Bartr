@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import { Toaster, toast } from 'sonner';
 import { ThemeProvider } from "@/components/theme-provider";
 import QueryProvider from "@/components/providers";
+import { AuthProvider } from "@/hooks/useAuth";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -41,7 +42,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${poppins.variable} ${outfit.variable}`} suppressHydrationWarning>
         <QueryProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
           </ThemeProvider>
           <Toaster richColors position="top-right" />
         </QueryProvider>

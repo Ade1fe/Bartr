@@ -10,7 +10,7 @@
 // import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 // import { Button } from '../ui/button';
 // import { Menu, Bell, LogOut, User, Settings, LayoutDashboard, ArrowLeftRight } from 'lucide-react';
-// import { useAUth } from '@/hooks/useAuth';
+// import { useAuth } from '@/hooks/useAuth';
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 // import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
@@ -32,7 +32,7 @@
 //   const router = useRouter();
 //   const pathname = usePathname();
 //   const [isOpen, setIsOpen] = useState(false);
-//   const { user, loading, signOut } = useAUth();
+//   const { user, loading, signOut } = useAuth();
 
 //   function getInitials(name: string | null): string {
 //     if (!name) return '?';
@@ -275,7 +275,7 @@ import { Button } from '../ui/button';
 import { ArrowLeftRight, Bell, LayoutDashboard, LogOut, LucideIcon, Menu, MessagesSquare, Settings, User } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useAUth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../ui/navigation-menu';
 
 type NavVisibility = 'always' | 'authenticated' | 'public';
@@ -313,7 +313,7 @@ export default function Header({ variant = 'default' }: { variant?: HeaderVarian
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const { user, loading, signOut } = useAUth();
+  const { user, loading, signOut } = useAuth();
 
   const navItems = getVisibleNavItems(!!user);
 

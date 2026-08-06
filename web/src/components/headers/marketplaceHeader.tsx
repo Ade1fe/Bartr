@@ -12,7 +12,7 @@ import { ArrowLeftRight, Bell, LayoutDashboard, LogOut, Menu, MessagesSquare, Se
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import NotificationBell from './../notificationBell/index';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { useAUth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../ui/navigation-menu';
 
 const navItems = [
@@ -37,7 +37,7 @@ export default function MarketplaceHeader() {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const { user, loading, signOut } = useAUth();
+  const { user, loading, signOut } = useAuth();
 
   function getInitials(name: string | null): string {
     if (!name) return '?';
