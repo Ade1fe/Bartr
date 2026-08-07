@@ -60,7 +60,7 @@ export default function SignInForm() {
         router.push('/onboarding/listings');
       }
       else {
-        router.push('/home');
+        router.push('/dashboard');
       }
     }
     catch (err: any) {
