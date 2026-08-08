@@ -81,7 +81,12 @@ export async function PUT(req: NextRequest) {
     if (updates.status !== undefined) algoliaUpdates.status = updates.status;
 
     if (Object.keys(algoliaUpdates).length > 0) {
-      await updateListingInIndex(listingId, algoliaUpdates);
+      try {
+        await updateListingInIndex(listingId, algoliaUpdates);
+      }
+      catch (err) {
+        console.error(`[listings/update] Algolia sync failed for ${listingId}`, err);
+      }
     }
 
     const updateSnap = await listingRef.get();

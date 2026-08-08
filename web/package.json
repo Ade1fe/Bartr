@@ -41,7 +41,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.72.0",
-    "react-instantsearch": "^7.28.1",
+    "react-instantsearch": "^7.42.0",
     "react-loader-spinner": "^8.0.0",
     "react-lottie-player": "^2.1.0",
     "resend": "^6.16.0",

@@ -6130,7 +6130,7 @@ react-instantsearch-core@7.42.0:
     instantsearch.js "4.109.0"
     use-sync-external-store "^1.0.0"
 
-react-instantsearch@^7.28.1:
+react-instantsearch@^7.42.0:
   version "7.42.0"
   resolved "https://registry.npmjs.org/react-instantsearch/-/react-instantsearch-7.42.0.tgz#129173a66fbfaac71226ae929777263f6fb80770"
   integrity sha512-YuCMwhUJNcxGQq/UZKpBxBHACCtkeuBJw2fVt8SWWsK8QGVZ11nFcmEtCUWOIgJl5wU0EkrQSlkAQNBDoIvnxQ==

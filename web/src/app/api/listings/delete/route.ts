@@ -51,7 +51,12 @@ export async function DELETE(req: NextRequest) {
       updatedAt: FieldValue.serverTimestamp(),
     })
 
-    await deleteListingFromIndex(listingId);
+    try {
+      await deleteListingFromIndex(listingId);
+    }
+    catch (err) {
+      console.error(`[listings/delete] Algolia sync failed for ${listingId}`, err);
+    }
 
     return NextResponse.json({ success: true, message: 'Listing deleted successfully' });
   }
