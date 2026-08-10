@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { DashboardNotification } from "@/types/dashboard";
 import { timeAgo } from "@/lib/time-ago";
+import { SkeletonRows } from "./skeleton-rows";
 
 interface NotificationsPanelProps {
   notifications?: DashboardNotification[];
@@ -22,7 +23,7 @@ export function NotificationsPanel({ notifications, unreadCount, loading }: Noti
         )}
       </CardHeader>
       <CardContent className="p-0 space-y-1">
-        {loading && Array.from({ length: 3 }).map((_, i) => (
+        {/* {loading && Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex items-center gap-3 py-2">
             <Skeleton className="h-9 w-9 rounded-full" />
             <div className="space-y-2 flex-1">
@@ -30,7 +31,8 @@ export function NotificationsPanel({ notifications, unreadCount, loading }: Noti
               <Skeleton className="h-3 w-36" />
             </div>
           </div>
-        ))}
+        ))} */}
+        {loading && <SkeletonRows count={3} variant="avatar-text" />}
 
         {!loading && notifications?.length === 0 && (
           <p className="text-sm text-neutral-500 py-4 text-center">You&apos;re all caught up.</p>

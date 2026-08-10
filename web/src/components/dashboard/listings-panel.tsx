@@ -5,6 +5,7 @@ import { Plus, Eye } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { DashboardListing } from "@/types/dashboard";
+import { SkeletonRows } from "./skeleton-rows";
 
 interface ListingsPanelProps {
   listings?: DashboardListing[];
@@ -25,7 +26,7 @@ export function ListingsPanel({ listings, loading }: ListingsPanelProps) {
         </Link>
       </CardHeader>
       <CardContent className="p-0 space-y-1">
-        {loading && Array.from({ length: 2 }).map((_, i) => (
+        {/* {loading && Array.from({ length: 2 }).map((_, i) => (
           <div key={i} className="flex items-center gap-3 py-2">
             <Skeleton className="h-12 w-12 rounded-md" />
             <div className="space-y-2 flex-1">
@@ -33,7 +34,8 @@ export function ListingsPanel({ listings, loading }: ListingsPanelProps) {
               <Skeleton className="h-3 w-16" />
             </div>
           </div>
-        ))}
+        ))} */}
+        {loading && <SkeletonRows count={2} variant="thumbnail-text" />}
 
         {!loading && listings?.length === 0 && (
           <div className="text-center py-4 space-y-2">
