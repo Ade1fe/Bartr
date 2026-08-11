@@ -11,6 +11,12 @@ async function backfill() {
 
   for (const doc of snap.docs) {
     const listing = doc.data();
+
+    const userSnap = await adminDb.collection("users").doc(listing.userId).get();
+    const userData = userSnap.data();
+    const sellerName = listing.sellerName ?? userData?.displayName ?? "Unknown";
+    const sellerAvatarUrl = listing.sellerAvatarUrl ?? userData?.photoURL ?? "";
+
     try {
       await saveListingToIndex({
         objectID: doc.id,
@@ -24,6 +30,8 @@ async function backfill() {
         photos: listing.photos,
         userId: listing.userId,
         status: listing.status,
+        sellerName,
+        sellerAvatarUrl,
       });
       console.log(`✓ Synced ${doc.id} — ${listing.title}`);
     }
