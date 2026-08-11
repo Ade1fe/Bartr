@@ -30,7 +30,7 @@ export default function Dashboard () {
         <div className='max-w-360 mx-auto px-4 md:px-8 grid grid-cols-1 items-center gap-8'>
           <div className='text-start'>
             {isLoading ? (
-              <Skeleton className="h-7 w-48 mb-3" />
+              <Skeleton className="h-7 w-48 mb-3 bg-neutral-200" />
             ) : (
               <h1 className='text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-poppins font-normal text-neutral-700 mb-3'>Welcome back, {firstName}!</h1>
             )}

@@ -21,6 +21,8 @@ export async function saveListingToIndex(listing: {
   userId: string;
   photos: string[];
   status: string;
+  sellerName: string;
+  sellerAvatarUrl: string;
 }) {
     return client.saveObject({
       indexName: INDEX_NAME,

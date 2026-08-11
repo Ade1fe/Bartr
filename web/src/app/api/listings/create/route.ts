@@ -13,10 +13,17 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validated = createListingSchema.parse(body);
 
+    const userSnap = await adminDb.collection('users').doc(userId).get();
+    const userData = userSnap.data();
+    const sellerName = userData?.displayName ?? 'Unknown';
+    const sellerAvatarUrl = userData?.photoURL ?? null;
+
     const listingRef = await adminDb.collection('listings').doc();
     await listingRef.set({
       ...validated,
       userId,
+      sellerName,
+      sellerAvatarUrl,
       status: 'active',
       views: 0,
       createdAt: new Date().toISOString(),
@@ -35,6 +42,8 @@ export async function POST(req: NextRequest) {
         condition: validated.condition,
         photos: validated.photos,
         userId,
+        sellerName,
+        sellerAvatarUrl,
         status: 'active',
       })
     }
