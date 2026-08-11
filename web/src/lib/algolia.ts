@@ -1,7 +1,7 @@
 import { algoliasearch } from 'algoliasearch';
 
 const client = algoliasearch(
-  process.env.ALGOLIA_APP_ID!,
+  process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
   process.env.ALGOLIA_ADMIN_API_KEY!
 )
 
@@ -19,6 +19,7 @@ export async function saveListingToIndex(listing: {
   creditValue: number;
   condition: string;
   userId: string;
+  photos: string[];
   status: string;
 }) {
     return client.saveObject({

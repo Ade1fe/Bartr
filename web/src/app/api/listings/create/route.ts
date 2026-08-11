@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
         wantTags: validated.wantTags,
         creditValue: validated.creditValue,
         condition: validated.condition,
+        photos: validated.photos,
         userId,
         status: 'active',
       })
