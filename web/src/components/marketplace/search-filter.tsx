@@ -48,14 +48,14 @@ export function SearchFilterBar({ locationMode, onLocationModeChange, onOpenFilt
           placeholder="Search for listings..."
           classNames={{
             root: 'flex-1',
-            input: 'w-full rounded-lg border border-neutral-100 px-4 py-2.5 text-sm outline-none focus:border-neutral-200',
+            input: 'w-full rounded-lg border border-neutral-100 px-4 py-2.5 text-sm outline-none focus:border-neutral-200 text-neutral-500',
             submitIcon: 'hidden',
             resetIcon: 'hidden',
           }}
         />
         <div className="flex flex-wrap gap-3">
           <Select value={category} onValueChange={handleCategoryChange}>
-            <SelectTrigger className="w-full sm:w-40 rounded-lg cursor-pointer border-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none text-sm">
+            <SelectTrigger className="w-full sm:w-40 rounded-lg cursor-pointer border-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none text-sm text-neutral-500">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent className='bg-white border-none outline-none'>
@@ -67,7 +67,7 @@ export function SearchFilterBar({ locationMode, onLocationModeChange, onOpenFilt
           </Select>
 
           <Select value={locationMode} onValueChange={onLocationModeChange}>
-            <SelectTrigger className="w-full sm:w-36 rounded-lg cursor-pointer border-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none text-sm">
+            <SelectTrigger className="w-full sm:w-36 rounded-lg cursor-pointer border-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none text-sm text-neutral-500">
               <SelectValue placeholder="Nearby" />
             </SelectTrigger>
             <SelectContent className='bg-white border-none outline-none'>
