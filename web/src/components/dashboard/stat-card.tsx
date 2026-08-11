@@ -13,7 +13,7 @@ export function StatCard({ icon, label, value, delta, loading }: StatCardProps) 
   return (
     <>
       {loading ? (
-        <Skeleton className='h-7 w-16 bg-neutral-200' />
+        <Skeleton className='h-32 lg:w-72 bg-neutral-100 p-4' />
       ) : (
         <Card className='rounded-lg shadow-xs border-neutral-100 p-4 md:p-5'>
           <CardContent className='p-0 space-y-2 md:space-y-3'>
@@ -22,7 +22,11 @@ export function StatCard({ icon, label, value, delta, loading }: StatCardProps) 
               <span className='text-neutral-400'>{icon}</span>
             </div>
               <p className='text-xl md:text-2xl font-medium text-neutral-900 mb-4'>{value}</p>
-              delta && <p className='text-xs text-neutral-500'>{delta}</p>
+              {loading ? (  
+                <Skeleton className='h-3 w-24 bg-neutral-200' />
+              ) : (
+                delta && <p className='text-xs text-neutral-500'>{delta}</p>
+              )}
           </CardContent>
         </Card>
       )}
