@@ -80,7 +80,7 @@ export function SearchFilterBar({ locationMode, onLocationModeChange, onOpenFilt
           </Select>
 
           <Button variant="outline" size="icon" onClick={onOpenFilters} className="rounded-lg border-neutral-100 shrink-0" aria-label="More filters" >
-            <SlidersHorizontal size={16} />
+            <SlidersHorizontal size={16} className='text-neutral-500' />
           </Button>
         </div>
       </div>
