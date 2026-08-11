@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, MapPin, Star } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface ListingCardProps {
   hit: {
@@ -26,6 +27,11 @@ export function ListingCard({ hit }: ListingCardProps) {
   const { user } = useAuth();
   const isOwnListing = user?.uid === hit.userId;
 
+  function getInitials(name: string | null): string {
+    if (!name) return '?';
+    return name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase();
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-xs border border-neutral-100 overflow-hidden">
       <Link href={`/marketplace/${hit.objectID}`} className="block relative h-56 w-full bg-neutral-100">
@@ -47,7 +53,19 @@ export function ListingCard({ hit }: ListingCardProps) {
 
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="h-6 w-6 rounded-full bg-neutral-200 shrink-0" />
+            <Avatar className='h-6 w-6 rounded-full'>
+              <AvatarImage src={hit?.sellerAvatarUrl ?? undefined} alt={hit.sellerName ?? 'Seller Avatar'} />
+              <AvatarFallback className='bg-[#86B7A9] text-white text-sm'>
+                {getInitials(user?.displayName ?? null)}
+              </AvatarFallback>
+            </Avatar>
+            {/* {hit.sellerAvatarUrl ? (
+              <Image src={hit.sellerAvatarUrl} alt={hit.sellerName ?? 'Seller avatar'} fill className="h-6 w-6 rounded-full bg-neutral-200 shrink-0" />
+            ) : (
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-neutral-200 text-xs text-neutral-500 shrink-0">
+                ?
+              </span>
+            )} */}
             <span className="text-xs md:text-sm text-neutral-600 truncate">{hit.sellerName ?? 'Unknown'}</span>
           </div>
           {!!hit.rating && (
