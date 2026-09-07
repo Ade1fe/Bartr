@@ -1,4 +1,5 @@
 'use client';
+
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../ui/card";
@@ -46,7 +47,8 @@ export default function SignInForm() {
       
 
       if (!sessionRes.ok) {
-        throw new Error('Failed to create session');
+        const data = await sessionRes.json().catch(() => null);
+        throw new Error(data?.error ?? 'Failed to create session');
       }
 
       const { onboardingComplete } = await sessionRes.json();
@@ -71,8 +73,9 @@ export default function SignInForm() {
         'auth/too-many-requests': 'Too many attempts. Please try again later',
         'auth/user-disabled': 'This account has been disabled',
       }
-      setError(errorMessage[err.code] ?? 'Sign in failed. Please try again.');
-      toast.error(errorMessage[err.code] ?? 'Sign in failed. Please try again.');
+      const message = errorMessage[err.code] ?? err.message ?? 'Sign in failed. Please try again.'
+      setError(message);
+      toast.error(message);
     }
     finally {
       setLoading(false);

@@ -4,7 +4,6 @@ import { adminDb } from "@/lib/firebase-admin";
 import { verifyToken } from "@/lib/auth";
 import { handleApiError, AppError } from "@/lib/errors";
 import { z } from 'zod';
-import { toast } from "sonner";
 
 const updateProfileSchema = z.object({
   displayName: z.string().min(1).max(100).optional(),
@@ -31,7 +30,6 @@ export async function PATCH(req: NextRequest) {
 
     if (!userSnap.exists) {
       throw new AppError('User profile not found', 404);
-      toast.error('User profile not found');
     }
 
     const updates: Record<string, unknown> = {

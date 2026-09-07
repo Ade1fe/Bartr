@@ -1,3 +1,4 @@
+// app/(auth)/auth/page.tsx
 "use client";
 
 import SignInForm from "@/components/auth/signInForm";

@@ -5,6 +5,8 @@ import { verifyToken } from "@/lib/auth";
 import { handleApiError, AppError } from "@/lib/errors";
 import { updateListingInIndex } from "@/lib/algolia";
 import { z } from "zod";
+import { computeCreditValue } from "@/types/credits";
+import { enqueueForReview } from "@/lib/moderation";
 
 const updateListingSchema = z.object({
   listingId: z.string().min(1, 'Listing ID is required '),
@@ -13,7 +15,7 @@ const updateListingSchema = z.object({
   category: z.enum(['electronics', 'furniture', 'clothing', 'books', 'tools', 'sports', 'food', 'collectibles', 'other']).optional(),
   offerTags: z.array(z.string().min(1).max(30)).min(1).max(10).optional(),
   wantTags: z.array(z.string().min(1).max(30)).min(1).max(10).optional(),
-  creditValue: z.number().int().min(0).max(50000).optional(),
+  estimatedValue: z.number().int().min(0).max(50_000_000).optional(),
   condition: z.enum(['new', 'like_new', 'good', 'fair', 'poor']).optional(),
   photos: z.array(z.string().url()).min(1).max(5).optional(),
   status: z.enum(['active', 'in_trade', 'deleted', 'closed']).optional(),
@@ -41,6 +43,11 @@ export async function PUT(req: NextRequest) {
 
     const listing = listingSnap.data()!;
 
+    const contentChanged = 
+      (updates.title !== undefined && updates.title !== listing.title) ||
+      (updates.description !== undefined && updates.description !== listing.description) ||
+      (updates.photos !== undefined && JSON.stringify(updates.photos) !== JSON.stringify(listing.photos));
+
     if (listing.userId !== userId) {
       throw new AppError('You do not have permission to update this listing', 403);
     }
@@ -62,12 +69,33 @@ export async function PUT(req: NextRequest) {
     if (updates.category !== undefined) firestoreUpdate.category = updates.category;
     if (updates.offerTags !== undefined) firestoreUpdate.offerTags = updates.offerTags;
     if (updates.wantTags !== undefined) firestoreUpdate.wantTags = updates.wantTags;
-    if (updates.creditValue !== undefined) firestoreUpdate.creditValue = updates.creditValue;
     if (updates.condition !== undefined) firestoreUpdate.condition = updates.condition;
     if (updates.photos !== undefined) firestoreUpdate.photos = updates.photos;
     if (updates.status !== undefined) firestoreUpdate.status = updates.status;
 
+    let creditValue: number | undefined;
+    if (updates.estimatedValue !== undefined) {
+      creditValue = computeCreditValue(updates.estimatedValue);
+      firestoreUpdate.estimatedValue = updates.estimatedValue;
+      firestoreUpdate.creditValue = creditValue;
+    }
+
+    if (contentChanged) {
+      firestoreUpdate.status = 'pending_moderation';
+    }
+
     await listingRef.update(firestoreUpdate);
+
+    let finalStatus = (firestoreUpdate.status as string | undefined) ?? listing.status;
+
+    if (contentChanged) {
+      try {
+        await enqueueForReview(listingId, 'edited_listing');
+      }
+      catch (queueErr) {
+        console.error(`[listings/update] Failed to enqueue listing ${listingId} for review`, queueErr);
+      }
+    }
 
     const algoliaUpdates: Record<string, unknown> = {};
 
@@ -76,7 +104,7 @@ export async function PUT(req: NextRequest) {
     if (updates.category !== undefined) algoliaUpdates.category = updates.category;
     if (updates.offerTags !== undefined) algoliaUpdates.offerTags = updates.offerTags;
     if (updates.wantTags !== undefined) algoliaUpdates.wantTags = updates.wantTags;
-    if (updates.creditValue !== undefined) algoliaUpdates.creditValue = updates.creditValue;
+    // if (updates.creditValue !== undefined) algoliaUpdates.creditValue = updates.creditValue;
     if (updates.condition !== undefined) algoliaUpdates.condition = updates.condition;
     if (updates.status !== undefined) algoliaUpdates.status = updates.status;
 

@@ -11,6 +11,7 @@ export async function requireSession() {
 
   try {
     const decoded = await adminAuth.verifySessionCookie(sessionCookie, true);
+    if (decoded.suspended) redirect('/suspended');
     if (!decoded.otpVerified) redirect('/verify-email');
     return decoded;
   }

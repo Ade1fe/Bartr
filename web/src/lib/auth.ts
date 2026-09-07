@@ -9,7 +9,7 @@ export async function verifyToken(req: NextRequest) {
   }
   const token = header.split('Bearer ')[1];
   try {
-    return await adminAuth.verifyIdToken(token);
+    return await adminAuth.verifyIdToken(token, true);
   }
   catch {
     throw new AuthError('Invalid or expired token');

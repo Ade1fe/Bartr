@@ -4,7 +4,6 @@ import { adminDb } from '@/lib/firebase-admin';
 import { verifyToken } from '@/lib/auth';
 import { handleApiError, AppError } from '@/lib/errors';
 import { z } from 'zod';
-import { toast } from "sonner";
 
 const createUserSchema = z.object({
   firstName: z.string().min(1).max(50),
@@ -28,7 +27,6 @@ export async function POST(req: NextRequest) {
 
     const existingDoc = await adminDb.collection('users').doc(userId).get();
     if (existingDoc.exists) {
-      toast.error('User profile already exists');
       throw new AppError('User profile already exists', 400);
     }
 

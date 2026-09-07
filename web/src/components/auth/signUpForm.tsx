@@ -137,8 +137,9 @@ export default function SignUpForm() {
       })
 
       if (!sessionRes.ok) {
-        toast.error('Failed to create session');
-        throw new Error('Failed to create session');
+        const data = await sessionRes.json().catch(() => null);
+        toast.error(data?.error ?? 'Failed to create session');
+        throw new Error(data?.error ?? 'Failed to create session');
       }
 
       toast.success("Account created. Let's trade.");
