@@ -14,13 +14,19 @@ export async function POST(req: NextRequest) {
     if (!idToken) {
       throw new AppError('Missing token', 401);
     }
+    
+    const userSnap = await adminDb.collection('users').doc(decoded.uid).get();
+    const userData = userSnap.data();
+
+    if (userData?.isSuspended) {
+      throw new AppError('Your account has been suspended. Contact support if you believe this is a mistake.', 403);
+    }
 
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
       expiresIn: SESSION_EXPIRES_IN_MS,
     })
 
-    const userSnap = await adminDb.collection('users').doc(decoded.uid).get();
-    const onboardingComplete = userSnap.exists ? !!userSnap.data()?.onboardingComplete : false;
+    const onboardingComplete = userSnap.exists ? !!userData?.onboardingComplete : false;
 
     const response = NextResponse.json({ success: true, onboardingComplete });
     

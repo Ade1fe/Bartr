@@ -6,7 +6,7 @@ export const createListingSchema = z.object({
   category: z.enum(['electronics', 'furniture', 'clothing', 'books', 'tools', 'sports', 'food', 'collectibles', 'other']),
   offerTags: z.array(z.string().min(1).max(30)).min(1).max(10),
   wantTags: z.array(z.string().min(1).max(30)).min(1).max(10),
-  creditValue: z.number().int().min(0).max(50000),
+  estimatedValue: z.number().int().min(0).max(50_000_000),
   photos: z.array(z.string().url()).min(1).max(5),
   condition: z.enum(['new', 'like_new', 'good', 'fair', 'poor']),
 });
@@ -41,4 +41,10 @@ export const createReviewSchema = z.object({
   revieweeId: z.string().min(1),
   rating: z.number().int().min(1).max(5),
   comment: z.string().min(10).max(500),
+})
+
+export const reportListingSchema = z.object({
+  listingId: z.string().min(1),
+  reason: z.enum(['prohibited_item', 'counterfeit_or_stolen', 'misleading_description', 'scam_or_fraud', 'inappropriate_content', 'other']),
+  details: z.string().max(500).optional(),
 })

@@ -210,6 +210,7 @@
 
 
 import { NextRequest, NextResponse } from 'next/server';
+import { adminAuth } from '@/lib/firebase-admin';
 
 const protectedRoutes = [
   '/dashboard',
@@ -224,25 +225,40 @@ const protectedRoutes = [
 ];
 const authRoutes = ['/auth'];
 const verifyEmailRoute = '/verify-email';
+const suspendedRoute = '/suspended';
 
-function readSessionPayload(cookie: string | undefined) {
+async function readSessionPayload(cookie: string | undefined) {
   if (!cookie) return null;
+  // try {
+  //   const [, payload] = cookie.split('.');
+  //   const json = JSON.parse(Buffer.from(payload, 'base64').toString('utf-8'));
+  //   if (json.exp && Date.now() >= json.exp * 1000) return null; // expired
+  //   return json as { uid?: string; otpVerified?: boolean };
+  // }
+  // catch {
+  //   return null;
+  // }
   try {
-    const [, payload] = cookie.split('.');
-    const json = JSON.parse(Buffer.from(payload, 'base64').toString('utf-8'));
-    if (json.exp && Date.now() >= json.exp * 1000) return null; // expired
-    return json as { uid?: string; otpVerified?: boolean };
+    // checkRevoked: true means a suspended user's existing session dies
+    // the instant an admin calls adminAuth.revokeRefreshTokens(uid) —
+    // no waiting for the cookie to expire naturally.
+    const decoded = await adminAuth.verifySessionCookie(cookie, true);
+    return {
+      uid: decoded.uid,
+      otpVerified: decoded.otpVerified === true,
+      suspended: decoded.suspended === true,
+    };
   }
   catch {
     return null;
   }
 }
 
-export function proxy(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const session = readSessionPayload(req.cookies.get('session')?.value);
+  const session = await readSessionPayload(req.cookies.get('session')?.value);
 
-  console.log('[proxy]', pathname, '| session:', session);
+  // console.log('[proxy]', pathname, '| session:', session);
 
   if (pathname === '/') {
     return NextResponse.redirect(new URL(session?.otpVerified ? '/dashboard' : '/home', req.url));
@@ -256,6 +272,7 @@ export function proxy(req: NextRequest) {
   const isProtected = protectedRoutes.some((r) => pathname.startsWith(r));
   const isAuthRoute = authRoutes.some((r) => pathname.startsWith(r));
   const isVerifyEmailRoute = pathname.startsWith(verifyEmailRoute);
+  const isSuspendedRoute = pathname.startsWith(suspendedRoute);
 
   if (!session) {
     if (isProtected || isVerifyEmailRoute) {
@@ -266,12 +283,17 @@ export function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
+  if (session.suspended) {
+    if (isSuspendedRoute) return NextResponse.next();
+    return NextResponse.redirect(new URL(suspendedRoute, req.url));
+  }
+
   if (!session.otpVerified) {
     if (isProtected || isAuthRoute) return NextResponse.redirect(new URL('/verify-email', req.url));
     return NextResponse.next();
   }
 
-  if (isVerifyEmailRoute || isAuthRoute) {
+  if (isVerifyEmailRoute || isAuthRoute || isSuspendedRoute) {
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
