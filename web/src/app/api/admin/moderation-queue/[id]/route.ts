@@ -10,13 +10,13 @@ const actionSchema = z.object({
   actionTaken: z.enum(['none', 'listing_approved', 'listing_removed', 'user_warned', 'user_suspended']),
 });
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const admin = await verifyAdminToken(req);
     const { action, actionTaken } = actionSchema.parse(await req.json());
 
-    const queueRef = adminDb.collection('moderationQueue').doc(params.id);
+    const queueRef = adminDb.collection('moderationQueue').doc(id);
     const queueSnap = await queueRef.get();
     if (!queueSnap.exists) throw new AppError('Queue item not found', 404);
     
