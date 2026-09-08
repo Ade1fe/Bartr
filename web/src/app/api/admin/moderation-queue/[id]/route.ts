@@ -12,6 +12,7 @@ const actionSchema = z.object({
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const { id } = await params;
     const admin = await verifyAdminToken(req);
     const { action, actionTaken } = actionSchema.parse(await req.json());
 
