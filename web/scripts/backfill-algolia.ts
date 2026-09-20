@@ -9,8 +9,16 @@ async function backfill() {
 
   console.log(`Found ${snap.size} active listings to backfill.`);
 
+  let skipped = 0;
+
   for (const doc of snap.docs) {
     const listing = doc.data();
+
+    if (!listing.location?.city || !listing.location?.state) {
+      console.warn(`⚠ Skipped ${doc.id} — no location on record. Backfill this listing's location first.`);
+      skipped++;
+      continue;
+    }
 
     const userSnap = await adminDb.collection("users").doc(listing.userId).get();
     const userData = userSnap.data();
@@ -32,6 +40,12 @@ async function backfill() {
         status: listing.status,
         sellerName,
         sellerAvatarUrl,
+        city: listing.location.city,
+        state: listing.location.state,
+        _geoloc: listing.location.lat !== null && listing.location.lat !== undefined
+          && listing.location.lng !== null && listing.location.lng !== undefined
+          ? { lat: listing.location.lat, lng: listing.location.lng }
+          : undefined,
       });
       console.log(`✓ Synced ${doc.id} — ${listing.title}`);
     }
@@ -40,7 +54,7 @@ async function backfill() {
     }
   }
 
-  console.log('Backfill complete.');
+  console.log(`Backfill complete. ${skipped} listing(s) skipped for missing location.`);
 }
 
 backfill();
