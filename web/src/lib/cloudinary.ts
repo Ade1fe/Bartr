@@ -1,5 +1,4 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { Upload } from 'lucide-react';
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
@@ -27,12 +26,12 @@ export type UploadFolderType = keyof typeof FOLDERS;
 
 export async function generateUploadSignature(folder: string) {
   const timestamp = Math.round(Date.now() / 1000);
-  const params = {
-    timestamp,
-    folder,
-    allowed_formats: 'jpg, png, jpeg, webp',
-    max_bytes: 5_000_000,
-  }
+  // const params = {
+  //   timestamp,
+  //   folder,
+  //   allowed_formats: 'jpg, png, jpeg, webp',
+  //   max_bytes: 5_000_000,
+  // }
 
   // const signature = cloudinary.utils.api_sign_request(
   //   params,

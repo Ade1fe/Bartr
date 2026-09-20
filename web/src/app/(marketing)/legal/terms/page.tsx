@@ -174,7 +174,7 @@ export default function TermsPage() {
 
           <Section id="who-we-are" number={1} title="Who We Are">
             <p>
-              <strong>Bartr</strong> ("we", "us", "our") is a peer-to-peer barter marketplace operated by [Your Company Name], registered in [Registration Country/State]. Our platform enables users to list goods and exchange them directly with other users without monetary transactions.
+              <strong>Bartr</strong> (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is a peer-to-peer barter marketplace operated by [Your Company Name], registered in [Registration Country/State]. Our platform enables users to list goods and exchange them directly with other users without monetary transactions.
             </p>
             <p className="mt-3">
               Contact:{' '}
@@ -295,7 +295,7 @@ export default function TermsPage() {
 
           <Section id="credit-system" number={6} title="Credit System">
             <p className="text-neutral-600">
-              Bartr credits ("<strong>Credits</strong>") are a platform utility token used to facilitate indirect trades and balance trade value differences.
+              Bartr credits (&quot;<strong>Credits</strong>&quot;) are a platform utility token used to facilitate indirect trades and balance trade value differences.
             </p>
 
             <ul className="mt-3 space-y-2 list-disc list-inside disc pl-3 lg:pl-5 marker:text-neutral-400 marker:text-xs">
@@ -409,13 +409,13 @@ export default function TermsPage() {
                 <TriangleAlert className="size-4 text-white" />
               </div>
               <p className="text-amber-800">
-                Bartr's dispute determination is final within the platform. We are not an arbitration service and our decisions do not prevent either party from seeking legal remedies independently. We can only adjudicate on platform-level outcomes — we cannot compel return of physical goods or financial compensation between users.
+                Bartr&apos;s dispute determination is final within the platform. We are not an arbitration service and our decisions do not prevent either party from seeking legal remedies independently. We can only adjudicate on platform-level outcomes — we cannot compel return of physical goods or financial compensation between users.
               </p>
             </div>
           </Section>
           <Section id="liability" number={9} title="Platform Liability Limitations">
             <p className="text-neutral-600">
-              The platform is provided <strong>"as is"</strong> without warranty of any kind, express or implied.
+              The platform is provided <strong>&quot;as is&quot;</strong> without warranty of any kind, express or implied.
             </p>
             <div className="mt-5 bg-red-50 border border-red-200 rounded-xl p-4 flex flex-col">
               <div className='flex gap-3'>

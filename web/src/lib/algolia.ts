@@ -7,6 +7,10 @@ const client = algoliasearch(
 
 export const INDEX_NAME = 'bartr_listings';
 
+interface AlgoliaGeoLoc {
+  lat: number;
+  lng: number;
+}
 
 // Save a new listing to the index (create or overwrite)
 export async function saveListingToIndex(listing: {
@@ -16,8 +20,11 @@ export async function saveListingToIndex(listing: {
   category: string;
   offerTags: string[];
   wantTags: string[];
+  city: string;
+  state: string;
+  _geoloc?: AlgoliaGeoLoc;
   creditValue: number;
-  condition: string;
+  condition?: string;
   userId: string;
   photos: string[];
   status: string;

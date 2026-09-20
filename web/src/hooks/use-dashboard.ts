@@ -2,9 +2,15 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { DashboardData } from "@/types/dashboard";
+import { clientAuth } from "@/lib/firebase-client";
 
 async function fetchDashboard(): Promise<DashboardData> {
-  const res = await fetch('/api/dashboard');
+  const token = await clientAuth.currentUser?.getIdToken();
+  if (!token) throw new Error('Not authenticated');
+
+  const res = await fetch('/api/dashboard', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   if (!res.ok) throw new Error('Failed to load dashboard');
   return res.json();
 }

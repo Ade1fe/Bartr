@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebase-admin";
 import { verifyAdminToken } from "@/lib/admin-auth";
-import { handleApiError, AppError } from "@/lib/errors";
+import { handleApiError, } from "@/lib/errors";
 
 export async function GET(req: NextRequest) {
   try {

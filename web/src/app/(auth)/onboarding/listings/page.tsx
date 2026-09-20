@@ -16,6 +16,8 @@ import { useImageUpload } from '@/hooks/useImageUpload'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import Loader from '@/components/loader'
+import { getErrorMessage } from '@/lib/error-utils'
+import Image from 'next/image'
 
 const CATEGORIES = [
   { value: 'electronics', label: 'Electronics' },
@@ -101,9 +103,10 @@ export default function OnboardingListingsPage() {
       toast.success('Yayy, your first listing has been successfully created!');
       router.push('/dashboard');
     } 
-    catch (err: any) {
-      toast.error(err.message || 'Something went wrong');
-      setError(err.message ?? 'Something went wrong')
+    catch (err: unknown) {
+      const message = getErrorMessage(err);
+      toast.error(message);
+      setError(message)
     }
     finally {
       setLoading(false)
@@ -120,9 +123,11 @@ export default function OnboardingListingsPage() {
           headers: { 'Authorization': `Bearer ${token}` },
         })
       }
-    } catch {
+    }
+    catch {
       // Non-blocking — a failed flag write shouldn't trap someone on this screen.
-    } finally {
+    }
+    finally {
       router.push('/dashboard')
     }
   }
@@ -188,13 +193,13 @@ export default function OnboardingListingsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
-                <Label className="text-neutral-600 font-medium text-sm">Category</Label>
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger className='cursor-pointer border-neutral-200 h-11 text-sm text-neutral-600 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none'>
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
                   <SelectContent className="border border-neutral-200 bg-white rounded-lg">
                     <SelectGroup>
+                      <SelectLabel className="text-neutral-600 font-medium text-sm">Category</SelectLabel>
                       {CATEGORIES.map(c => <SelectItem className='hover:bg-neutral-100 hover:cursor-pointer' key={c.value} value={c.value}>{c.label}</SelectItem>)}
                     </SelectGroup>
                   </SelectContent>
@@ -235,7 +240,7 @@ export default function OnboardingListingsPage() {
             {/* What I want */}
             <div className="grid gap-2">
               <Label htmlFor="wantTags" className="text-neutral-600 font-medium text-sm">
-                What I'm seeking <span className="text-xs font-normal text-neutral-400">(comma separated)</span>
+                What I&apos;m seeking <span className="text-xs font-normal text-neutral-400">(comma separated)</span>
               </Label>
               <Input id="wantTags" placeholder="e.g. furniture, gardening tools" value={wantTags} onChange={e => setWantTags(e.target.value)} className="border-neutral-200 text-sm shadow-none text-neutral-600 h-11 outline-none focus:outline-none focus:ring-1 focus:ring-[#86B7A9]" />
               {wantTagList.length > 0 && (
@@ -279,7 +284,7 @@ export default function OnboardingListingsPage() {
                 <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-1">
                   {previewUrls.map((url, index) => (
                     <div key={index} className="relative aspect-square rounded-lg overflow-hidden border border-neutral-200 group">
-                      <img src={url} alt="" className="w-full h-full object-cover" />
+                      <Image src={url} alt="" className="w-full h-full object-cover" />
                       <button type="button" onClick={() => removePhoto(index)} className="absolute top-1 right-1 h-5 w-5 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" >
                         <X className="h-3 w-3" />
                       </button>
@@ -306,7 +311,7 @@ export default function OnboardingListingsPage() {
         {/* ── Live preview — desktop, sticky ─────────────── */}
         <div className="hidden lg:block sticky top-10">
           <p className="text-xs font-medium text-neutral-400 uppercase tracking-widest mb-3 px-1">
-            How it'll look
+            How it&apos;ll look
           </p>
           <ListingPreviewCard title={title} description={description} categoryLabel={categoryLabel} conditionLabel={conditionLabel} offerTagList={offerTagList} wantTagList={wantTagList} creditValue={creditValue} coverImage={previewUrls[0]} />
         </div>
@@ -317,7 +322,7 @@ export default function OnboardingListingsPage() {
         <button type="button" onClick={() => setMobilePreviewOpen(o => !o)} className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-neutral-200 bg-white text-sm text-neutral-600" >
           <span className="flex items-center gap-2 font-medium">
             <ImageIcon className="h-4 w-4 text-[#86B7A9]" />
-            Preview how it'll look
+            Preview how it&apos;ll look
           </span>
           <span className="text-neutral-400 text-sm">{mobilePreviewOpen ? 'Hide' : 'Show'}</span>
         </button>
@@ -339,7 +344,7 @@ function ListingPreviewCard({ title, description, categoryLabel, conditionLabel,
     <div className="rounded-2xl border border-neutral-100 bg-white shadow-sm overflow-hidden">
       <div className="aspect-4/3 bg-neutral-100 relative flex items-center justify-center">
         {coverImage ? (
-          <img src={coverImage} alt="" className="w-full h-full object-cover" />
+          <Image src={coverImage} alt="" className="w-full h-full object-cover" />
         ) : (
           <ImageIcon className="h-8 w-8 text-neutral-300" />
         )}

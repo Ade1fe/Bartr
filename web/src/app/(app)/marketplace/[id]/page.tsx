@@ -7,7 +7,9 @@ import { SellerCard } from "@/components/marketplace/seller-card";
 import { ListingReviews } from "@/components/marketplace/listing-reviews";
 import { SimilarListings } from "@/components/marketplace/similar-listings";
 import { Badge } from "@/components/ui/badge";
-import type { ListingDetail, SellerProfile, Review } from "@/types/listing";
+import type { ListingDetail, SellerProfile, Review, AlgoliaListingHit } from "@/types/listing";
+import { ReporrtListingButton } from "@/components/listings/reportListingButton";
+
 
 export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -45,12 +47,12 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
     reviewCount: sellerSnap.data()?.reviewCount,
     totalTrades: sellerSnap.data()?.completedTradesCount,
     responseTimeHours: sellerSnap.data()?.responseTimeHours,
-    memberSince: sellerSnap.data()?.createdAt,
-    verified: sellerSnap.data()?.idVerified === true,
+    createdAt: sellerSnap.data()?.createdAt?.toDate().toISOString() ?? null,
+    verified: sellerSnap.data()?.verificationStatus === 'verified',
   };
 
   const reviews: Review[] = reviewsSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Review));
-  const similar = (similarResults.results[0] as any)?.hits ?? [];
+  const similar = (similarResults.results[0] as { hits?: AlgoliaListingHit[] })?.hits ?? [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-6">
@@ -73,7 +75,7 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
             </div>
 
             <div className="flex flex-wrap gap-2 mb-4">
-              <Badge className="bg-blue-50 text-blue-700 rounded-full capitalize">{listing.condition.replace('_', ' ')}</Badge>
+              <Badge className="bg-blue-50 text-blue-700 rounded-full capitalize">{listing.condition?.replace('_', ' ') ?? listing.tradeType?.replace('_', ' ')}</Badge>
               <Badge className="bg-neutral-100 text-neutral-600 rounded-full capitalize">{listing.category}</Badge>
             </div>
 
@@ -100,6 +102,7 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
           </div>
 
           <SellerCard seller={seller} />
+          <ReporrtListingButton listingId={listing.id} />
         </div>
       </div>
 

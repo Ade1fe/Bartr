@@ -1,11 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
-import { ArrowLeft, LogOut, LucideIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, LucideIcon } from 'lucide-react';
 import { Bartr_bg } from '@/assets';
-import { Button } from '../ui/button';
 import AccountMenu from '../accountmenu';
 
 type AppHeaderProps = {
@@ -35,9 +33,13 @@ export default function AppHeader({ title, icon: Icon, showBack, backHref, right
 
           {Icon && <Icon className="h-5 w-5 text-[#86B7A9]" />}
 
-          <div className="relative h-16 w-24">
+          <div className="relative h-14 w-14 lg:h-16 lg:w-24">
             <Image src={Bartr_bg} fill className="object-contain hover:cursor-pointer" loading='lazy' alt="Bartr" onClick={() => router.push('/')} />
           </div>
+
+          {title && (
+            <span className="text-sm font-medium text-neutral-700">{title}</span>
+          )}
         </div>
 
         <div className="flex items-center gap-3">

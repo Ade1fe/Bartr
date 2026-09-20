@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Eye, EyeClosed } from "lucide-react";
 import Loader from "../loader";
+import { getErrorMessage, getFirebaseErrorCode } from "@/lib/error-utils";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -65,7 +66,7 @@ export default function SignInForm() {
         router.push('/dashboard');
       }
     }
-    catch (err: any) {
+    catch (err: unknown) {
       const errorMessage: Record<string, string> = {
         'auth/invalid-credential': 'Invalid email or password',
         'auth/user-not-found': 'No account found with this email',
@@ -73,7 +74,8 @@ export default function SignInForm() {
         'auth/too-many-requests': 'Too many attempts. Please try again later',
         'auth/user-disabled': 'This account has been disabled',
       }
-      const message = errorMessage[err.code] ?? err.message ?? 'Sign in failed. Please try again.'
+      const code = getFirebaseErrorCode(err);
+      const message = (code && errorMessage[code]) ?? getErrorMessage(err);
       setError(message);
       toast.error(message);
     }

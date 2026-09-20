@@ -15,7 +15,7 @@ function getInitials(name: string | null): string {
 
 export default function AccountMenu() {
   const router = useRouter();
-  const { user, loading, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const unreadCount = useUnreadNotifications(user?.uid);
 
 

@@ -1,3 +1,4 @@
+import "@/app/globals.css";
 import AppHeader from "@/components/headers/appHeader";
 
 export default function Layout({

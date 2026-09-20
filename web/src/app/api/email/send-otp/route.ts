@@ -4,7 +4,6 @@ import { adminDb } from "@/lib/firebase-admin";
 import { verifyToken } from "@/lib/auth";
 import { handleApiError, AppError } from "@/lib/errors";
 import { generateOtp, hashOtp, otpExpiresAt } from "@/lib/otp";
-import { resend, FROM_EMAIL } from "@/lib/resend";
 import { z } from 'zod';
 import { sendTransactionalEmail } from "@/lib/email";
 

@@ -3,18 +3,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import { verifyToken } from "@/lib/auth";
 import { handleApiError, AppError } from "@/lib/errors";
-import { z } from 'zod';
-
-const updateProfileSchema = z.object({
-  displayName: z.string().min(1).max(100).optional(),
-  firstName: z.string().min(1).max(50).optional(),
-  lastName: z.string().min(1).max(50).optional(),
-  bio: z.string().max(300).optional(),
-  location: z.string().max(100).optional(),
-  profilePictureUrl: z.string().url().nullable().optional(),
-  phoneNumber: z.string().optional(),
-  accountType: z.enum(['individual', 'business']).optional(),
-})
+import { updateProfileSchema } from "@/lib/validators";
 
 
 export async function PATCH(req: NextRequest) {

@@ -32,7 +32,7 @@ const LOCATIONS = [
 ]
 
 export function SearchFilterBar({ locationMode, onLocationModeChange, onOpenFilters }: SearchFilterBarProps) {
-  const { items, refine } = useRefinementList({ attribute: 'category' });
+  const { refine } = useRefinementList({ attribute: 'category' });
   const [category, setCategory] = useState('all');
 
   function handleCategoryChange(value: string) {
