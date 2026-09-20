@@ -194,12 +194,12 @@ export default function OnboardingListingsPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
                 <Select value={category} onValueChange={setCategory}>
-                  <SelectLabel className="text-neutral-600 font-medium text-sm">Category</SelectLabel>
                   <SelectTrigger className='cursor-pointer border-neutral-200 h-11 text-sm text-neutral-600 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 outline-none'>
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
                   <SelectContent className="border border-neutral-200 bg-white rounded-lg">
                     <SelectGroup>
+                      <SelectLabel className="text-neutral-600 font-medium text-sm">Category</SelectLabel>
                       {CATEGORIES.map(c => <SelectItem className='hover:bg-neutral-100 hover:cursor-pointer' key={c.value} value={c.value}>{c.label}</SelectItem>)}
                     </SelectGroup>
                   </SelectContent>
