@@ -15,7 +15,8 @@ const RESEND_COOLDOWN_SECONDS = 60
 
 export default function VerifyEmailPage() {
   const router = useRouter()
-  const [email, setEmail] = useState<string | null>(null)
+  // const [email, setEmail] = useState<string | null>(null)
+  const [email] = useState(() => clientAuth.currentUser?.email ?? null)
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(''))
   const [verifying, setVerifying] = useState(false)
   const [sending, setSending] = useState(false)
@@ -29,7 +30,7 @@ export default function VerifyEmailPage() {
       router.push('/auth')
       return
     }
-    setEmail(user.email)
+    // setEmail(user.email)
     sendCode()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

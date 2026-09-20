@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebase-admin";
-import { verifyAdmin } from "@/lib/admin-auth";
+import { verifyAdminToken } from "@/lib/admin-auth";
 import { handleApiError, AppError } from "@/lib/errors";
 import { z } from "zod";
 
@@ -8,7 +8,7 @@ const schema = z.object({ decision: z.enum(['verified', 'rejected']) });
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const admin = await verifyAdmin(req);
+    const admin = await verifyAdminToken(req);
     const { decision } = schema.parse(await req.json());
 
     const userRef = adminDb.collection('users').doc(params.id);

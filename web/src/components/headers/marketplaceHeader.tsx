@@ -13,6 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import NotificationBell from './../notificationBell/index';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
+import type { User as FirebaseUser } from 'firebase/auth';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../ui/navigation-menu';
 
 const navItems = [
@@ -44,7 +45,7 @@ export default function MarketplaceHeader() {
     return name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
   }
 
-  function AuthenticatedActions() {
+  function AuthenticatedActions({ user, signOut }: { user: FirebaseUser, signOut: () => Promise<void> }) {
     return (
       <div className='flex items-center gap-3'>
         <Button variant='ghost' size='icon' className='relative' onClick={() => router.push('/notifications')}>
@@ -241,7 +242,7 @@ export default function MarketplaceHeader() {
         {loading ? (
           <div className="h-8 w-8 rounded-full bg-neutral-100 animate-pulse" />
         ) : user ? (
-          <AuthenticatedActions />
+          <AuthenticatedActions user={user} signOut={signOut} />
         ) : (
           <UnauthenticatedActions />
         )}

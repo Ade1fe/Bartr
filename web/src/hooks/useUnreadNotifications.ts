@@ -9,7 +9,6 @@ export function useUnreadNotifications(uid: string | undefined) {
 
   useEffect(() => {
     if (!uid) {
-      setCount(0);
       return;
     }
 
@@ -23,7 +22,10 @@ export function useUnreadNotifications(uid: string | undefined) {
       setCount(snapshot.size);
     })
 
-    return () => unsubscribe()
+    return () => {
+      unsubscribe()
+      setCount(0);
+    }
   }, [uid])
 
   return count;

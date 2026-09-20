@@ -49,14 +49,14 @@ export async function PUT(req: NextRequest) {
       (updates.photos !== undefined && JSON.stringify(updates.photos) !== JSON.stringify(listing.photos));
 
     
-    const effectiveListingType = updates.listingType ?? listingType ?? 'good';
+    // const effectiveListingType = updates.listingType ?? listing.listingType ?? 'good';
     const switchingToGood = updates.listingType === 'good' && listing.listingType !== 'good';
     const switchingToService = updates.listingType === 'service' && listing.listingType !== 'service';
 
     if (switchingToGood && updates.condition === undefined) {
       throw new AppError(`Condition is required when switching a listing to "good"`, 400);
     }
-    if (switchingToService && (updates.tradeType === undefined || updates.availability === undefines)) {
+    if (switchingToService && (updates.tradeType === undefined || updates.availability === undefined)) {
       throw new AppError(`Trade type and availability are required when switching a listing to 'service'`, 400);
     }
     
@@ -107,7 +107,7 @@ export async function PUT(req: NextRequest) {
 
     await listingRef.update(firestoreUpdate);
 
-    let finalStatus = (firestoreUpdate.status as string | undefined) ?? listing.status;
+    const finalStatus = (firestoreUpdate.status as string | undefined) ?? listing.status;
 
     if (contentChanged) {
       try {
@@ -150,7 +150,7 @@ export async function PUT(req: NextRequest) {
     const updateSnap = await listingRef.get();
     const updatedListing = { id: listingId, ...updateSnap.data() };
 
-    return NextResponse.json({updatedListing});
+    return NextResponse.json({ updatedListing, status: finalStatus });
   }
   catch (err) {
     return handleApiError(err);

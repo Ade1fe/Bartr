@@ -22,6 +22,12 @@ export function handleApiError(error: unknown) {
 }
 
 
+export function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  return 'Something went wrong';
+}
+
+
 export class AppError extends Error {
   constructor(public message: string, public status: 400 | 401 | 403 | 404 | 500) {
     super(message);
