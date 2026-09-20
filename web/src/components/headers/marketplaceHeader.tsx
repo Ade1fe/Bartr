@@ -14,7 +14,10 @@ import NotificationBell from './../notificationBell/index';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { useAuth } from '@/hooks/useAuth';
 import type { User as FirebaseUser } from 'firebase/auth';
+import type { useRouter as UseRouterType } from 'next/navigation';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../ui/navigation-menu';
+
+type RouterInstance = ReturnType<typeof UseRouterType>;
 
 const navItems = [
   { label: 'Dashboard', href: '/dashboard' },
@@ -33,6 +36,86 @@ const appNavItems = [
   { label: 'Community', href: '/community', icon: null },
 ]
 
+
+function getInitials(name: string | null): string {
+  if (!name) return '?';
+  return name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+}
+
+
+function AuthenticatedActions({ user, signOut, router }: { user: FirebaseUser, signOut: () => Promise<void>; router: RouterInstance }) {
+  return (
+    <div className='flex items-center gap-3'>
+      <Button variant='ghost' size='icon' className='relative' onClick={() => router.push('/notifications')}>
+        <Bell className='h-5 w-5 text-neutral-500' />
+      </Button>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className='rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-200'>
+            <Avatar className="h-8 w-8 cursor-pointer">
+              <AvatarImage src={user?.photoURL ?? undefined} alt={user?.displayName ?? 'User'} />
+              <AvatarFallback className="bg-[#86B7A9] text-white text-sm">
+                {getInitials(user?.displayName ?? null)}
+              </AvatarFallback>
+            </Avatar>
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-52 bg-white shadow-lg border-neutral-100">
+          {/* User info at top */}
+          <div className="px-3 py-2 border-b border-neutral-100">
+            <p className="text-sm font-medium text-neutral-700 truncate">
+              {user?.displayName ?? 'User'}
+            </p>
+            <p className="text-xs text-neutral-500 truncate">
+              {user?.email}
+            </p>
+          </div>
+
+          <DropdownMenuItem className="cursor-pointer text-neutral-600 hover:text-neutral-900" onClick={() => router.push(`/profile/${user?.uid}`)} >
+            <User className="mr-2 h-4 w-4" />
+            My Profile
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="cursor-pointer text-neutral-600 hover:text-neutral-900" onClick={() => router.push('/dashboard')} >
+            <LayoutDashboard className="mr-2 h-4 w-4" />
+            Dashboard
+          </DropdownMenuItem>
+
+          <DropdownMenuItem className="cursor-pointer text-neutral-600 hover:text-neutral-900" onClick={() => router.push('/profile/settings')} >
+            <Settings className="mr-2 h-4 w-4" />
+            Settings
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator className="bg-neutral-100" />
+
+          <DropdownMenuItem className="cursor-pointer text-red-500 hover:text-red-600" onClick={signOut} >
+            <LogOut className="mr-2 h-4 w-4" />
+            Sign Out
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  )
+}
+
+
+function UnauthenticatedActions({ onNavigate, router }: { onNavigate?: () => void; router: RouterInstance }) {
+  return (
+    <div className='flex items-center gap-3'>
+      <Button variant='outline' className='border-none shadow-none hover:shadow-sm cursor-pointer' onClick={() => { onNavigate?.(); router.push('/auth') }} >
+        Sign In
+      </Button>
+      <Button className='bg-black text-white border-none shadow-sm cursor-pointer' onClick={() => { onNavigate?.(); router.push('/auth') }} >
+        Sign Up
+      </Button>
+    </div>
+  )
+}
+
+
+
+
 export default function MarketplaceHeader() {
   const isMobile = useIsMobile();
   const router = useRouter();
@@ -40,80 +123,6 @@ export default function MarketplaceHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const { user, loading, signOut } = useAuth();
 
-  function getInitials(name: string | null): string {
-    if (!name) return '?';
-    return name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
-  }
-
-  function AuthenticatedActions({ user, signOut }: { user: FirebaseUser, signOut: () => Promise<void> }) {
-    return (
-      <div className='flex items-center gap-3'>
-        <Button variant='ghost' size='icon' className='relative' onClick={() => router.push('/notifications')}>
-          <Bell className='h-5 w-5 text-neutral-500' />
-        </Button>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className='rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-200'>
-              <Avatar className="h-8 w-8 cursor-pointer">
-                <AvatarImage src={user?.photoURL ?? undefined} alt={user?.displayName ?? 'User'} />
-                <AvatarFallback className="bg-[#86B7A9] text-white text-sm">
-                  {getInitials(user?.displayName ?? null)}
-                </AvatarFallback>
-              </Avatar>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-52 bg-white shadow-lg border-neutral-100">
-            {/* User info at top */}
-            <div className="px-3 py-2 border-b border-neutral-100">
-              <p className="text-sm font-medium text-neutral-700 truncate">
-                {user?.displayName ?? 'User'}
-              </p>
-              <p className="text-xs text-neutral-500 truncate">
-                {user?.email}
-              </p>
-            </div>
-
-            <DropdownMenuItem className="cursor-pointer text-neutral-600 hover:text-neutral-900" onClick={() => router.push(`/profile/${user?.uid}`)} >
-              <User className="mr-2 h-4 w-4" />
-              My Profile
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className="cursor-pointer text-neutral-600 hover:text-neutral-900" onClick={() => router.push('/dashboard')} >
-              <LayoutDashboard className="mr-2 h-4 w-4" />
-              Dashboard
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className="cursor-pointer text-neutral-600 hover:text-neutral-900" onClick={() => router.push('/profile/settings')} >
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator className="bg-neutral-100" />
-
-            <DropdownMenuItem className="cursor-pointer text-red-500 hover:text-red-600" onClick={signOut} >
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    )
-  }
-
-
-  function UnauthenticatedActions({ onNavigate }: { onNavigate?: () => void }) {
-    return (
-      <div className='flex items-center gap-3'>
-        <Button variant='outline' className='border-none shadow-none hover:shadow-sm cursor-pointer' onClick={() => { onNavigate?.(); router.push('/auth') }} >
-          Sign In
-        </Button>
-        <Button className='bg-black text-white border-none shadow-sm cursor-pointer' onClick={() => { onNavigate?.(); router.push('/auth') }} >
-          Sign Up
-        </Button>
-      </div>
-    )
-  }
 
   if (isMobile) {
     return (
@@ -242,9 +251,9 @@ export default function MarketplaceHeader() {
         {loading ? (
           <div className="h-8 w-8 rounded-full bg-neutral-100 animate-pulse" />
         ) : user ? (
-          <AuthenticatedActions user={user} signOut={signOut} />
+          <AuthenticatedActions user={user} signOut={signOut} router={router} />
         ) : (
-          <UnauthenticatedActions />
+          <UnauthenticatedActions router={router} />
         )}
       </div>
     </header>

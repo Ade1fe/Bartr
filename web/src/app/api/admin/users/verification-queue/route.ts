@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebase-admin";
-import { verifyAdmin } from "@/lib/admin-auth";
+import { verifyAdminToken } from "@/lib/admin-auth";
 import { handleApiError } from "@/lib/errors";
 
 export async function GET(req: NextRequest) {
   try {
-    await verifyAdmin(req);
+    await verifyAdminToken(req);
 
     const snap = await adminDb.collection('users')
       .where('verificationStatus', '==', 'pending')
