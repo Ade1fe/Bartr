@@ -1,6 +1,5 @@
 'use client';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Eye } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

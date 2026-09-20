@@ -66,7 +66,7 @@ export default function SignInForm() {
         router.push('/dashboard');
       }
     }
-    catch (err: any) {
+    catch (err: unknown) {
       const errorMessage: Record<string, string> = {
         'auth/invalid-credential': 'Invalid email or password',
         'auth/user-not-found': 'No account found with this email',
@@ -75,7 +75,7 @@ export default function SignInForm() {
         'auth/user-disabled': 'This account has been disabled',
       }
       const code = getFirebaseErrorCode(err);
-      const message = (code && errorMessage[err.code]) ?? getErrorMessage(err);
+      const message = (code && errorMessage[code]) ?? getErrorMessage(err);
       setError(message);
       toast.error(message);
     }

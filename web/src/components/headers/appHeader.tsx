@@ -1,11 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
-import { ArrowLeft, LogOut, LucideIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, LucideIcon } from 'lucide-react';
 import { Bartr_bg } from '@/assets';
-import { Button } from '../ui/button';
 import AccountMenu from '../accountmenu';
 
 type AppHeaderProps = {

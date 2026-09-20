@@ -6,7 +6,7 @@ interface LoaderProps {
   type?: LoaderType;
   color?: string;
   height?: number;
-  width?: any;
+  width?: number | string;
   visible?: boolean;
   wrapperClass?: string;
   ariaLabel?: string;

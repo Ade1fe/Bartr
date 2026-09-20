@@ -1,4 +1,4 @@
-import { Bell, BellRing } from "lucide-react";
+import { Bell, /* BellRing */ } from "lucide-react";
 
 interface NotificationBellProps {
   onClick?: () => void;

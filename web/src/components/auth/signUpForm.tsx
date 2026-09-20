@@ -11,7 +11,7 @@ import { useState } from "react";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
 import { MapPin, CloudUpload, CheckCircle2, X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "../ui/empty";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { clientAuth } from "@/lib/firebase-client";
 import { useImageUpload } from "@/hooks/useImageUpload";

@@ -151,7 +151,7 @@ export default function ResolutionPage() {
             <div>
               <p className="text-xs lg:text-sm font-medium text-[#86B7A9] mb-1">In plain English</p>
               <p className="text-xs lg:text-sm text-neutral-600 leading-relaxed">
-                If a trade goes wrong — your partner didn&apos;t deliver, or the item was nothing like the listing — you can file a dispute within 7 days. Both sides submit evidence, and Bartr's team reviews it within 5 business days. We can adjust credits and accounts, but we can't physically retrieve items or provide legal advice.
+                If a trade goes wrong — your partner didn&apos;t deliver, or the item was nothing like the listing — you can file a dispute within 7 days. Both sides submit evidence, and Bartr&apos;s team reviews it within 5 business days. We can adjust credits and accounts, but we can&apos;t physically retrieve items or provide legal advice.
               </p>
             </div>
           </div>

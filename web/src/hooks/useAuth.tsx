@@ -90,7 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       router.push('/auth');
     }
-    catch (err: any) {
+    catch (err: unknown) {
       toast.error(getErrorMessage(err));
     }
   }

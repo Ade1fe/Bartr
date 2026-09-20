@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import Loader from '@/components/loader'
 import { getErrorMessage } from '@/lib/error-utils'
+import Image from 'next/image'
 
 const CATEGORIES = [
   { value: 'electronics', label: 'Electronics' },
@@ -283,7 +284,7 @@ export default function OnboardingListingsPage() {
                 <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-1">
                   {previewUrls.map((url, index) => (
                     <div key={index} className="relative aspect-square rounded-lg overflow-hidden border border-neutral-200 group">
-                      <img src={url} alt="" className="w-full h-full object-cover" />
+                      <Image src={url} alt="" className="w-full h-full object-cover" />
                       <button type="button" onClick={() => removePhoto(index)} className="absolute top-1 right-1 h-5 w-5 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer" >
                         <X className="h-3 w-3" />
                       </button>
@@ -343,7 +344,7 @@ function ListingPreviewCard({ title, description, categoryLabel, conditionLabel,
     <div className="rounded-2xl border border-neutral-100 bg-white shadow-sm overflow-hidden">
       <div className="aspect-4/3 bg-neutral-100 relative flex items-center justify-center">
         {coverImage ? (
-          <img src={coverImage} alt="" className="w-full h-full object-cover" />
+          <Image src={coverImage} alt="" className="w-full h-full object-cover" />
         ) : (
           <ImageIcon className="h-8 w-8 text-neutral-300" />
         )}

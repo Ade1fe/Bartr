@@ -4,8 +4,9 @@ import { InstantSearch, SearchBox, Hits, Configure } from "react-instantsearch";
 import { searchClient, ALGOLIA_INDEX_NAME } from "@/lib/algolia-search";
 import Link from "next/link";
 import Image from "next/image";
+import { AlgoliaListingHit } from "@/types/listing";
 
-function Hit({ hit }: { hit: any }) {
+function Hit({ hit }: { hit: AlgoliaListingHit }) {
   return (
     <Link href={`/marketplace/${hit.objectID}`} className="block border border-neutral-100 rounded-lg p-3 hover:border-neutral-200">
       <div className="relative h-32 w-full rounded-md overflow-hidden bg-neutral-100 mb-2">

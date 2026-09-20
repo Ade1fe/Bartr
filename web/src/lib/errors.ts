@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { AuthError } from "./auth";
-import { getErrorMessage, getFirebaseErrorCode } from "./error-utils";
 
 
 export function handleApiError(error: unknown) {
