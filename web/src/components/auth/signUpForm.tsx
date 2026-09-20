@@ -21,6 +21,7 @@ import Loader from "../loader";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { NIGERIA_STATES, type NigeriaState } from "@/types/location";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { getErrorMessage, getFirebaseErrorCode } from "@/lib/errors";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -31,7 +32,6 @@ export default function SignUpForm() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [location, setLocation] = useState('');
   const [bio, setBio] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
@@ -150,15 +150,17 @@ export default function SignUpForm() {
       toast.success("Account created. Let's trade.");
       router.push('/onboarding/listings');
     }
-    catch (err: any) {
+    catch (err: unknown) {
       const errorMessages: Record<string, string> = {
         'auth/email-already-in-use': 'An account with this email already exists',
         'auth/invalid-email': 'Please enter a valid email address',
         'auth/weak-password': 'Password must be at least 6 characters',
       }
 
-      toast.error(errorMessages[err.code] ?? err.message ?? 'Registration failed. Please try again.')
-      setError(errorMessages[err.code] ?? err.message ?? 'Registration failed. Please try again.')
+      const code = getFirebaseErrorCode(err);
+      const message = (code && errorMessages[code]) ?? getErrorMessage(err);
+      toast.error(message)
+      setError(message)
     }
     finally {
       setLoading(false);

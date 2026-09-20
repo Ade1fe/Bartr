@@ -1,6 +1,7 @@
 import { ListingCard } from "./listing-card";
+import type { AlgoliaListingHit } from "@/types/listing";
 
-export function SimilarListings({ listings }: { listings: any[] }) {
+export function SimilarListings({ listings }: { listings: AlgoliaListingHit[] }) {
   return (
     <div>
       <h2 className="text-base font-medium text-neutral-800 mb-4">Similar Listings</h2>

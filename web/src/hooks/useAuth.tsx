@@ -56,6 +56,7 @@ import { onAuthStateChanged, signOut, User } from "firebase/auth"
 import { clientAuth } from "@/lib/firebase-client"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { getErrorMessage } from "@/lib/errors"
 
 type AuthContextValue = {
   user: User | null;
@@ -90,7 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       router.push('/auth');
     }
     catch (err: any) {
-      toast.error('Sign out error', err);
+      toast.error(getErrorMessage(err));
     }
   }
 

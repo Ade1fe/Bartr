@@ -3,7 +3,7 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
-import { ArrowRight, MessageSquare, Search, Users, TrendingUp, Shield, CircleCheck } from "lucide-react";
+import { ArrowRight, MessageSquare, Search, Users, Shield, CircleCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Page() {

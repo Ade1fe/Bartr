@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { algoliasearch } from "algoliasearch";
+import { INDEX_NAME } from "@/lib/algolia";
+import type { AlgoliaListingHit } from "@/types/listing";
 
 const client = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID!,
@@ -9,7 +11,7 @@ const client = algoliasearch(
 )
 
 export function useSearch(query: string, category?: string) {
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<AlgoliaListingHit[]>([]);
   const [loading, setLoading] = useState(false);
 
   const search = useCallback(async () => {
@@ -24,9 +26,9 @@ export function useSearch(query: string, category?: string) {
       const filters = ['status:active'];
       if (category) filters.push(`category:${category}`);
 
-      const response = await client.searchForHits({
+      const response = await client.searchForHits<AlgoliaListingHit>({
         requests: [{
-          indexName: 'bartr_listings',
+          indexName: INDEX_NAME,
           query,
           filters: filters.join(' AND '),
           hitsPerPage: 20,

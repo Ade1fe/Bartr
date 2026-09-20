@@ -9,7 +9,7 @@ import { ListingsPanel } from "@/components/dashboard/listings-panel";
 import { RecentCreditsPanel } from "@/components/dashboard/recent-credits-panel";
 import { Box, Coins, CheckCircle2, Star } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import Loader from "@/components/loader";
+// import Loader from "@/components/loader";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard () {
@@ -29,7 +29,7 @@ export default function Dashboard () {
       <section className='max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-6 md:space-y-8'>
         <div className='max-w-360 mx-auto px-4 md:px-8 grid grid-cols-1 items-center gap-8'>
           <div className='text-start'>
-            {isLoading ? (
+            {isLoading && authLoading ? (
               <Skeleton className="h-7 w-48 mb-3 bg-neutral-200" />
             ) : (
               <h1 className='text-lg md:text-xl lg:text-2xl 2xl:text-3xl font-poppins font-normal text-neutral-700 mb-3'>Welcome back, {firstName}!</h1>

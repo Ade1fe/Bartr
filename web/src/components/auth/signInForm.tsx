@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Eye, EyeClosed } from "lucide-react";
 import Loader from "../loader";
+import { getErrorMessage, getFirebaseErrorCode } from "@/lib/errors";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -73,7 +74,8 @@ export default function SignInForm() {
         'auth/too-many-requests': 'Too many attempts. Please try again later',
         'auth/user-disabled': 'This account has been disabled',
       }
-      const message = errorMessage[err.code] ?? err.message ?? 'Sign in failed. Please try again.'
+      const code = getFirebaseErrorCode(err);
+      const message = (code && errorMessage[err.code]) ?? getErrorMessage(err);
       setError(message);
       toast.error(message);
     }

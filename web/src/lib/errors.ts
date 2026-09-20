@@ -28,6 +28,15 @@ export function getErrorMessage(err: unknown): string {
 }
 
 
+export function getFirebaseErrorCode(err: unknown): string | undefined {
+  if (typeof err === 'object' && err !== null && 'code' in err) {
+    const code = (err as Record<string, unknown>).code;
+    return typeof code === 'string' ? code : undefined;
+  }
+  return undefined;
+}
+
+
 export class AppError extends Error {
   constructor(public message: string, public status: 400 | 401 | 403 | 404 | 500) {
     super(message);

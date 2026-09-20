@@ -9,6 +9,24 @@ export type ListingType = 'good' | 'service';
 export type TradeType = 'one_time' | 'recurring' | 'flexible';
 export type AvailabilityType = 'immediate' | 'scheduled' | 'by_appointment';
 
+export interface AlgoliaListingHit {
+  objectID: string;
+  title: string;
+  description: string;
+  category: string;
+  offerTags: string[];
+  wantTags: string[];
+  creditValue: number;
+  condition?: string;
+  photos: string[];
+  userId: string;
+  sellerName: string;
+  sellerAvatarUrl: string;
+  city: string;
+  state: string;
+  status: string;
+}
+
 // The literal shape of a `listings/{id}` Firestore document
 export interface Listing {
   id: string;

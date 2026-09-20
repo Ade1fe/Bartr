@@ -9,6 +9,7 @@ import { clientAuth } from '@/lib/firebase-client'
 import { MailCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import Loader from '@/components/loader'
+import { getErrorMessage } from '@/lib/errors'
 
 const CODE_LENGTH = 6
 const RESEND_COOLDOWN_SECONDS = 60
@@ -64,9 +65,11 @@ export default function VerifyEmailPage() {
 
       setCooldown(RESEND_COOLDOWN_SECONDS)
       toast.success('Code sent, check your inbox')
-    } catch (err: any) {
-      toast.error(err.message ?? 'Failed to send code')
-    } finally {
+    }
+    catch (err: unknown) {
+      toast.error(getErrorMessage(err))
+    }
+    finally {
       setSending(false)
     }
   }
@@ -166,9 +169,10 @@ export default function VerifyEmailPage() {
       }
 
     }
-    catch (err: any) {
-      setError(err.message ?? 'Verification failed');
-      toast.error(err.message ?? 'Verification failed');
+    catch (err: unknown) {
+      const message = getErrorMessage(err);
+      setError(message);
+      toast.error(message);
     }
     finally {
       setVerifying(false)

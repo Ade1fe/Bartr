@@ -4,7 +4,6 @@ import { adminDb } from "@/lib/firebase-admin";
 import { verifyToken } from "@/lib/auth";
 import { handleApiError, AppError } from "@/lib/errors";
 import { updateListingInIndex } from "@/lib/algolia";
-import { z } from "zod";
 import { computeCreditValue } from "@/types/credits";
 import { enqueueForReview } from "@/lib/moderation";
 import { updateListingSchema } from "@/lib/validators";

@@ -18,7 +18,7 @@ export function ListingActions({ listing }: { listing: ListingDetail }) {
     return (
       <div className="space-y-3">
         <p className="text-xs text-neutral-400 bg-neutral-50 rounded-md px-3 py-2">
-          This is your listing — you can't propose a trade on it.
+          This is your listing — you can&apos;t propose a trade on it.
         </p>
         <Button
           onClick={() => router.push(`/profile/listings/${listing.id}/edit`)}
