@@ -6,12 +6,13 @@ import { z } from "zod";
 
 const schema = z.object({ decision: z.enum(['verified', 'rejected']) });
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const admin = await verifyAdminToken(req);
     const { decision } = schema.parse(await req.json());
+    const { id } = await params;
 
-    const userRef = adminDb.collection('users').doc(params.id);
+    const userRef = adminDb.collection('users').doc(id);
     const userSnap = await userRef.get();
     if (!userSnap.exists) throw new AppError('User not found', 404);
 
