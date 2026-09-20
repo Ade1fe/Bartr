@@ -6,6 +6,7 @@ import { createListingSchema } from "@/lib/validators";
 import { NextRequest, NextResponse } from "next/server";
 import { computeCreditValue } from "@/types/credits";
 import { enqueueForReview } from "@/lib/moderation";
+import { getSellerLocationOrThrow } from "@/lib/location";
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,6 +17,7 @@ export async function POST(req: NextRequest) {
     const validated = createListingSchema.parse(body);
 
     const creditValue = computeCreditValue(validated.estimatedValue);
+    const location = await getSellerLocationOrThrow(userId);
 
     const userSnap = await adminDb.collection('users').doc(userId).get();
     const userData = userSnap.data();
@@ -29,6 +31,7 @@ export async function POST(req: NextRequest) {
       userId,
       sellerName,
       sellerAvatarUrl,
+      location,
       status: 'pending_moderation',
       views: 0,
       createdAt: new Date().toISOString(),
@@ -51,11 +54,14 @@ export async function POST(req: NextRequest) {
         offerTags: validated.offerTags,
         wantTags: validated.wantTags,
         creditValue,
-        condition: validated.condition,
+        condition: validated.listingType === 'good' ? validated.condition! : undefined,
         photos: validated.photos,
         userId,
         sellerName,
         sellerAvatarUrl,
+        city: location.city,
+        state: location.state,
+        _geoloc: location.lat !== null && location.lng !== null ? { lat: location.lat, lng: location.lng } : undefined,
         status: 'pending_moderation',
       })
     }

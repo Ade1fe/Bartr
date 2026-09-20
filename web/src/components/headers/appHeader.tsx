@@ -35,7 +35,7 @@ export default function AppHeader({ title, icon: Icon, showBack, backHref, right
 
           {Icon && <Icon className="h-5 w-5 text-[#86B7A9]" />}
 
-          <div className="relative h-16 w-24">
+          <div className="relative h-14 w-14 lg:h-16 lg:w-24">
             <Image src={Bartr_bg} fill className="object-contain hover:cursor-pointer" loading='lazy' alt="Bartr" onClick={() => router.push('/')} />
           </div>
         </div>

@@ -8,6 +8,7 @@ import { ListingReviews } from "@/components/marketplace/listing-reviews";
 import { SimilarListings } from "@/components/marketplace/similar-listings";
 import { Badge } from "@/components/ui/badge";
 import type { ListingDetail, SellerProfile, Review } from "@/types/listing";
+import { ReporrtListingButton } from "@/components/listings/reportListingButton";
 
 export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -45,8 +46,8 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
     reviewCount: sellerSnap.data()?.reviewCount,
     totalTrades: sellerSnap.data()?.completedTradesCount,
     responseTimeHours: sellerSnap.data()?.responseTimeHours,
-    memberSince: sellerSnap.data()?.createdAt,
-    verified: sellerSnap.data()?.idVerified === true,
+    createdAt: sellerSnap.data()?.createdAt?.toDate().toISOString() ?? null,
+    verified: sellerSnap.data()?.verificationStatus === 'verified',
   };
 
   const reviews: Review[] = reviewsSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Review));
@@ -100,6 +101,7 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
           </div>
 
           <SellerCard seller={seller} />
+          <ReporrtListingButton listingId={listing.id} />
         </div>
       </div>
 

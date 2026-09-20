@@ -4,7 +4,7 @@ import type { SellerProfile } from "@/types/listing";
 
 export function SellerCard({ seller }: { seller: SellerProfile }) {
   const initials = seller.displayName.split(' ').map((n) => n[0]).join('').slice(0, 2);
-  const memberSinceLabel = seller.memberSince ? new Date(seller.memberSince).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : null;
+  const memberSinceLabel = seller.createdAt ? new Date(seller.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : null;
 
   return (
     <div className="bg-white rounded-lg shadow-xs border border-neutral-100 p-5">

@@ -1,8 +1,13 @@
 // src/types/listing.ts
 
+import { GeoLocation } from "./location";
+
 export type ListingCategory = 'electronics' | 'furniture' | 'clothing' | 'books' | 'tools' | 'sports' | 'food' | 'collectibles' | 'other';
 export type ListingCondition = 'new' | 'like_new' | 'good' | 'fair' | 'poor';
-export type ListingStatus = 'active' | 'in_trade' | 'deleted' | 'closed';
+export type ListingStatus = 'pending_moderation' | 'active' | 'hidden' | 'in_trade' | 'closed' | 'deleted';
+export type ListingType = 'good' | 'service';
+export type TradeType = 'one_time' | 'recurring' | 'flexible';
+export type AvailabilityType = 'immediate' | 'scheduled' | 'by_appointment';
 
 // The literal shape of a `listings/{id}` Firestore document
 export interface Listing {
@@ -13,17 +18,16 @@ export interface Listing {
   title: string;
   description: string;
   category: ListingCategory;
+  listingType: ListingType;
   condition: ListingCondition;
+  tradeType?: TradeType;
+  availability?: AvailabilityType;
+  deliveryDuration?: string;
   offerTags: string[];
   wantTags: string[];
   creditValue: number;
   photos: string[];
-  location: {
-    city: string;
-    state: string;
-    lat: number;
-    lng: number;
-  };
+  location: GeoLocation;
   status: ListingStatus;
   views: number;
   createdAt: string;
@@ -42,6 +46,7 @@ export interface SellerProfile {
   reviewCount?: number;
   totalTrades?: number;
   responseTimeHours?: number;
+  createdAt?: string | null;
   memberSince?: string;
   verified?: boolean;
 }
@@ -55,4 +60,4 @@ export interface Review {
 }
 
 // What the [id] detail page actually needs — a subset of Listing
-export type ListingDetail = Pick<Listing, 'id' | 'title' | 'description' | 'category' | 'condition' | 'offerTags' | 'wantTags' | 'creditValue' | 'photos' | 'userId' | 'status'>;
+export type ListingDetail = Pick<Listing, 'id' | 'title' | 'description' | 'category' | 'condition' | 'listingType' | 'condition' | 'tradeType' | 'availability' | 'deliveryDuration' | 'offerTags' | 'wantTags' | 'creditValue' | 'photos' | 'userId' | 'status'>;

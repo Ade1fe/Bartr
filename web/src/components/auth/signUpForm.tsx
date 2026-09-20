@@ -19,6 +19,8 @@ import { toast } from "sonner";
 import { Eye, EyeClosed } from "lucide-react";
 import Loader from "../loader";
 import { CheckedState } from "@radix-ui/react-checkbox";
+import { NIGERIA_STATES, type NigeriaState } from "@/types/location";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -42,6 +44,9 @@ export default function SignUpForm() {
 
   const profileUpload = useImageUpload({ type: 'profiles' });
   const idDocUpload = useImageUpload({ type: 'idDocuments' });
+
+  const [state, setState] = useState<NigeriaState | ''>('');
+  const [city, setCity] = useState('');
 
   const handleNext = (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -115,7 +120,7 @@ export default function SignUpForm() {
           lastName,
           email,
           phoneNumber,
-          location,
+          location: state && city ? { city, state, lat: null, lng: null } : undefined,
           bio,
           photoURL,
           idDocumentUrl,
@@ -245,14 +250,33 @@ export default function SignUpForm() {
           {currentStep === 2 && (
             <FieldSet>
               <FieldGroup>
-                <Field className='grid gap-3'>
-                  <FieldLabel htmlFor="location" className='text-neutral-600'>Location</FieldLabel>
-                  <InputGroup id="location" className='border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600'>
-                    <InputGroupInput placeholder="City, State" value={location} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocation(e.target.value)} className='text-[0.813rem] md:text-sm border-0 focus:border-0 focus-visible:border-0 outline-0 focus:outline-0 focus-visible:outline-0' />
-                    <InputGroupAddon>
-                      <MapPin size={16} />
-                    </InputGroupAddon>
-                  </InputGroup>
+                <Field className='grid grid-cols-2 gap-3'>
+                  <div className="grid gap-3">
+                    <FieldLabel htmlFor="location" className='text-neutral-600'>Location</FieldLabel>
+                    <Select value={state} onValueChange={(v) => setState(v as NigeriaState)}>
+                      <SelectTrigger className="cursor-pointer border-neutral-100 shadow-xs h-10 text-sm text-neutral-500 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none!">
+                        <SelectValue placeholder='Select state'/>
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border border-neutral-200 rounded-lg max-h-64">
+                        <SelectGroup>
+                          {NIGERIA_STATES.map(s => (
+                            <SelectItem key={s} value={s} className="cursor-pointer text-neutral-500 hover:bg-neutral-100">
+                              {s}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-3">
+                    <FieldLabel htmlFor="city" className='text-neutral-600'>City</FieldLabel>
+                    <InputGroup className='border-neutral-100 ring-0! ring-offset-0! outline-none! focus:ring-0! focus:ring-offset-0! focus:outline-none! focus-visible:ring-0! focus-visible:ring-offset-0! focus-visible:outline-none! shadow-xs text-neutral-600'>
+                      <InputGroupInput placeholder="e.g. Ikeja" value={city} onChange={(e) => setCity(e.target.value)} className='text-[0.813rem] md:text-sm border-0 focus:border-0 focus-visible:border-0 outline-0 focus:outline-0 focus-visible:outline-0' />
+                      <InputGroupAddon>
+                        <MapPin size={16} />
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </div>
                 </Field>
 
                 <Field className="grid gap-3">
