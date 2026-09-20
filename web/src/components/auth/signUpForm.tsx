@@ -201,7 +201,7 @@ export default function SignUpForm() {
           <CardTitle className='font-normal text-2xl font-outfit text-neutral-600'>Create Your Account</CardTitle>
           {currentStep === 2 && (
             <CardDescription className="font-normal text-base font-outfit text-neutral-600">
-              Tell us about yourself and what you're looking to trade
+              Tell us about yourself and what you&apos;re looking to trade
             </CardDescription>
           )}
         </CardHeader>

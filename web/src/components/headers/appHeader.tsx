@@ -36,6 +36,10 @@ export default function AppHeader({ title, icon: Icon, showBack, backHref, right
           <div className="relative h-14 w-14 lg:h-16 lg:w-24">
             <Image src={Bartr_bg} fill className="object-contain hover:cursor-pointer" loading='lazy' alt="Bartr" onClick={() => router.push('/')} />
           </div>
+
+          {title && (
+            <span className="text-sm font-medium text-neutral-700">{title}</span>
+          )}
         </div>
 
         <div className="flex items-center gap-3">
