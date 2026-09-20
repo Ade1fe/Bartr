@@ -9,7 +9,7 @@ import { clientAuth } from '@/lib/firebase-client'
 import { MailCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import Loader from '@/components/loader'
-import { getErrorMessage } from '@/lib/errors'
+import { getErrorMessage } from '@/lib/error-utils'
 
 const CODE_LENGTH = 6
 const RESEND_COOLDOWN_SECONDS = 60

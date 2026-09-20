@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { AuthError } from "./auth";
+import { getErrorMessage, getFirebaseErrorCode } from "./error-utils";
 
 
 export function handleApiError(error: unknown) {
@@ -19,21 +20,6 @@ export function handleApiError(error: unknown) {
   }
 
   return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-}
-
-
-export function getErrorMessage(err: unknown): string {
-  if (err instanceof Error) return err.message;
-  return 'Something went wrong';
-}
-
-
-export function getFirebaseErrorCode(err: unknown): string | undefined {
-  if (typeof err === 'object' && err !== null && 'code' in err) {
-    const code = (err as Record<string, unknown>).code;
-    return typeof code === 'string' ? code : undefined;
-  }
-  return undefined;
 }
 
 

@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Eye, EyeClosed } from "lucide-react";
 import Loader from "../loader";
-import { getErrorMessage, getFirebaseErrorCode } from "@/lib/errors";
+import { getErrorMessage, getFirebaseErrorCode } from "@/lib/error-utils";
 
 export default function SignInForm() {
   const router = useRouter();

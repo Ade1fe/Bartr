@@ -56,7 +56,7 @@ import { onAuthStateChanged, signOut, User } from "firebase/auth"
 import { clientAuth } from "@/lib/firebase-client"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { getErrorMessage } from "@/lib/errors"
+import { getErrorMessage } from "@/lib/error-utils"
 
 type AuthContextValue = {
   user: User | null;

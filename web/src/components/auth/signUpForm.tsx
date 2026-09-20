@@ -21,7 +21,7 @@ import Loader from "../loader";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { NIGERIA_STATES, type NigeriaState } from "@/types/location";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { getErrorMessage, getFirebaseErrorCode } from "@/lib/errors";
+import { getErrorMessage, getFirebaseErrorCode } from "@/lib/error-utils";
 
 export default function SignUpForm() {
   const router = useRouter();

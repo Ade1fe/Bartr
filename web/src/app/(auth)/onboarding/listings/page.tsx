@@ -16,7 +16,7 @@ import { useImageUpload } from '@/hooks/useImageUpload'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import Loader from '@/components/loader'
-import { getErrorMessage } from '@/lib/errors'
+import { getErrorMessage } from '@/lib/error-utils'
 
 const CATEGORIES = [
   { value: 'electronics', label: 'Electronics' },
